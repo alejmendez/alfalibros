@@ -1,0 +1,16 @@
+{
+    "name": "Pagina",
+    "alias": "pagina",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "alfalibros\\Modules\\Pagina\\Providers\\PaginaServiceProvider"
+    ],
+    "aliases": {},
+    "files": [
+        "start.php"
+    ],
+    "requires": []
+}

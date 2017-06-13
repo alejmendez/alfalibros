@@ -1,0 +1,9 @@
+<?php
+
+namespace {{namespace}};
+
+use alfalibros\Http\Requests\Request;
+
+class {{classname}} extends Request {
+    protected $reglasArr = {{rules}};
+}

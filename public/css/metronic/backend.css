@@ -1,0 +1,116 @@
+.page-content {
+	min-height: 400px;
+}
+
+#botonera{
+	margin-bottom: 0;
+	text-align: right;
+}
+
+#botonera #restaurar, 
+#botonera #destruir{
+	display: none;
+}
+
+#botonera span{
+	font-weight: bold;
+}
+
+#botonera.affix {
+	z-index: 1000;
+	right: 15px;
+	top:  34px;
+	background-color: #EFF3F8;
+}
+
+@media (min-width: 992px){
+	#botonera.affix {
+		right: 60px;
+	}
+}
+
+#botonera .msj-botonera{
+	font-size: 16px;
+	padding: 15px 20px;
+	margin-bottom: 10px;
+	display: none;
+}
+
+#botonera .msj-botonera i{
+	margin-right: 5px;
+}
+
+#botonera .msj-botonera .fa-close{
+	float: right;
+	cursor: pointer;
+}
+
+.modal-busqueda{
+	padding-right: 0 !important;
+}
+.modal-busqueda .dataTable{
+	width: 100% !important;
+}
+
+.modal-busqueda .dataTable tbody td{
+	cursor: pointer;
+}
+
+.modal-busqueda .modal-dialog.container{
+	width: 100%;
+	padding: 0 2px;
+}
+
+.modal-busqueda .modal-dialog{
+	margin: 10px 0;
+}
+
+.modal-busqueda .btn-datatable{
+	float: left; margin-right: 10px
+}
+
+div.form-control{
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.ui-datepicker-month,
+.ui-datepicker-year{
+	color: black !important;
+}
+
+.control-label .required, 
+.form-group .required {
+    color: #333;
+    font-size: 14px;
+    padding-left: 0;
+    font-weight: bold;
+}
+
+label .fa-plus{
+	color: #70BF2B;
+	cursor: pointer;
+}
+
+label .fa-pencil{
+	color: #EFB80B;
+	cursor: pointer;
+}
+
+label .fa-pencil.disabled{
+	color: #FAEAB6;
+	cursor: default;
+}
+
+.form-control.has-warning {
+	background-image: linear-gradient(#ff5722,#ff5722),linear-gradient(#d2d2d2,#d2d2d2) !important;
+}
+
+.tooltip{
+	z-index: 50000 !important;
+}
+
+.campo_numeric{
+	padding: 0 0 0 5px;
+}

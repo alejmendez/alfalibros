@@ -19,6 +19,7 @@ class Controller extends BaseController
 
 	public $autenticar = false;
 	public $paginar = 12;
+	public $urlphppos = 12;
 
 	protected $patch_js = [
 		'public/js',
@@ -41,12 +42,23 @@ class Controller extends BaseController
 		'modernizr','components-metronic'
 	];
 
+	public function __construct()
+	{
+		parent::__construct();
+		$this->urlphppos = $this->urlphppos();
+	}
+
 	public function setTitulo($titulo)
 	{
 		//$this->titulo = 'Tumundoclick | ' . $titulo;
 		SEOMeta::setTitle('Alfalibros ' . $titulo);
 	}
 	
+	public function urlphppos($url = '')
+	{
+		return env('APP_URL_PHPPOS', 'http://alfalibros.net/paneldelibros/index.php/') . $url;
+	}
+
 	protected function productoQB()
 	{
 		return DB::connection('phppos')

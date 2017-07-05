@@ -38,12 +38,12 @@ Route::group(['middleware' => 'web', 'namespace' => 'alfalibros\Modules\Pagina\H
 	});
 	
 	Route::group(['prefix' => 'compra'], function() {
-		Route::get('ver/{codigo?}/{paso?}',						'CompraController@ver')
+		Route::get('ver/{codigo?}/{paso?}',				'CompraController@ver')
 			->where('codigo', '[a-zA-Z0-9]{80}')
 			->where('paso', '[1|2|3|4]')
 			->name('pag.compra.ver');
 		
-		Route::get('ver/cotizacion/{codigo?}',						'CompraController@cotizacion')
+		Route::get('ver/cotizacion/{codigo?}',			'CompraController@cotizacion')
 			->name('pag.compra.cotizacion');
 
 		Route::post('facturacion', 						'CompraController@facturacion');

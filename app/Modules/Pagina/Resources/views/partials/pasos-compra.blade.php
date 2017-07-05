@@ -60,15 +60,18 @@ $lista = [
     @endif
 <div class="row">
     <div class="col-xs-12">
-        @if($paso != 4)
-            <button id="cotizacion" type="button" class="btn btn-primary btn-imprimir" style="float: right;">
-                <i class="fa fa-print" aria-hidden="true"></i> Imprimir Cotización
-            </button>
-        @else
-            <button id="cotizacion" type="button" class="btn btn-primary btn-imprimir" style="float: right;">
-                <i class="fa fa-print" aria-hidden="true"></i> Imprimir Factura
-            </button>
+        @if($paso != 2)
+            @if($paso != 4)
+                <button id="cotizacion" type="button" class="btn btn-primary btn-imprimir" style="float: right;">
+                    <i class="fa fa-print" aria-hidden="true"></i> Imprimir Cotización
+                </button>
+            @else
+                <button id="cotizacion" type="button" class="btn btn-primary btn-imprimir" style="float: right;">
+                    <i class="fa fa-print" aria-hidden="true"></i> Imprimir Factura
+                </button>
+            @endif
         @endif
+        
         @if($paso == 3)
             <button id="btn-datosBancosModal" type="button" class="btn btn-info" data-dismiss="modal" style="float: right; margin-right: 10px;" data-toggle="modal" data-target="#datosBancosModal">
                 <i class="fa fa-info" aria-hidden="true"></i>

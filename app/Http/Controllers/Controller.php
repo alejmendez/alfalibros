@@ -48,7 +48,8 @@ abstract class Controller extends BaseController {
 
 	protected $_librerias = [];
 
-	public function __construct() {
+	public function __construct() 
+	{
 		$this->prefijo_ruta = \Config::get('admin.prefix');
 
 		$this->libreriaEntorno = \Config::get('admin.libreriaEntorno');

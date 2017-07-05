@@ -55,21 +55,15 @@
 												@if ($compra->created_at->addHour()->timestamp < \Carbon\Carbon::now()->timestamp)
 													
 												@elseif ($compra->aprobado == 0 && is_null($compra->bancos_id))
-													<div class="btn-group">
-														<a href="{{ route('pag.compra.ver', ['codigo' => $compra->codigo]) }}" title="Pagar ahora" data-toggle="tooltip" class="btn btn-info">
-															<i class="fa fa-check" aria-hidden="true"></i>
-														</a>
-														<a href="{{ route('pag.compra.cancelar', ['codigo' => $compra->codigo]) }}" title="Cancelar Compra" data-toggle="tooltip" class="btn btn-danger">
-															<i class="fa fa-remove" aria-hidden="true"></i>
+													<div class="btn-group text-center">
+														<a href="{{ route('pag.compra.ver', ['codigo' => $compra->codigo, 'paso' => 2]) }}" title="Ver Cotización" data-toggle="tooltip" class="btn btn-info">
+															<i class="fa fa-eye" aria-hidden="true"></i>
 														</a>
 													</div>
 												@elseif ($compra->aprobado > 0 && $compra->bancos_id > 0)
-													<div class="btn-group">
-														<a href="{{ route('pag.compra.cotizacion', ['codigo' => $compra->codigo]) }}" title="ver compra" data-toggle="tooltip" class="btn btn-info">
+													<div class="btn-group text-center">
+														<a href="{{ route('pag.compra.cotizacion', ['codigo' => $compra->codigo]) }}" title="Ver Cotización" data-toggle="tooltip" class="btn btn-info">
 															<i class="fa fa-eye" aria-hidden="true"></i>
-														</a>
-														<a href="{{ route('pag.compra.cancelar', ['codigo' => $compra->codigo]) }}" title="Cancelar Compra" data-toggle="tooltip" class="btn btn-danger">
-															<i class="fa fa-remove" aria-hidden="true"></i>
 														</a>
 													</div>
 
@@ -130,6 +124,9 @@
 														<a href="{{ route('pag.compra.ver', ['codigo' => $compra->codigo]) }}" title="Pagar ahora" data-toggle="tooltip" class="btn btn-info">
 															<i class="fa fa-check" aria-hidden="true"></i>
 														</a>
+														<a href="{{ route('pag.compra.ver', ['codigo' => $compra->codigo, 'paso' => 2]) }}" title="Ver Cotización" data-toggle="tooltip" class="btn btn-success">
+															<i class="fa fa-dollar" aria-hidden="true"></i>
+														</a>
 														<a href="{{ route('pag.compra.cancelar', ['codigo' => $compra->codigo]) }}" title="Cancelar Compra" data-toggle="tooltip" class="btn btn-danger">
 															<i class="fa fa-remove" aria-hidden="true"></i>
 														</a>
@@ -138,6 +135,9 @@
 													<div class="btn-group">
 														<a href="{{ route('pag.compra.cotizacion', ['codigo' => $compra->codigo]) }}" title="ver compra" data-toggle="tooltip" class="btn btn-info">
 															<i class="fa fa-eye" aria-hidden="true"></i>
+														</a>
+														<a href="{{ route('pag.compra.cotizacion', ['codigo' => $compra->codigo]) }}" title="Ver Cotización" data-toggle="tooltip" class="btn btn-success">
+															<i class="fa fa-dollar" aria-hidden="true"></i>
 														</a>
 														<a href="{{ route('pag.compra.cancelar', ['codigo' => $compra->codigo]) }}" title="Cancelar Compra" data-toggle="tooltip" class="btn btn-danger">
 															<i class="fa fa-remove" aria-hidden="true"></i>
@@ -169,6 +169,12 @@
 <style type="text/css">
 	#tabla-compra img {
 		max-width: 50px;
+	}
+
+	#tabla-compra .btn {
+		width: 40px;
+		margin-left: 0;
+		margin-right: 0;
 	}
 </style>
 @endpush

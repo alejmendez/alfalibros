@@ -172,7 +172,7 @@ class UsuariosController extends Controller {
     }
 
     public function datatable(Request $request) {
-        $sql = Usuario::select('id', 'dni', 'nombre', 'usuario', 'deleted_at');
+        $sql = Usuario::select('id', 'usuario', 'deleted_at');
 
         if ($request->verSoloEliminados == 'true'){
             $sql->onlyTrashed();
@@ -187,6 +187,4 @@ class UsuariosController extends Controller {
             })
             ->make(true);
     }
-
-   
 }

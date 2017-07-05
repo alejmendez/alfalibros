@@ -9,7 +9,7 @@ class Producto extends Model
 	protected $connection = 'phppos';
 
 	public $timestamps = false;
-	protected $primaryKey = 'sale_id';
+	protected $primaryKey = 'item_id';
     public $incrementing = false;
 
 	protected $table = 'phppos_items';

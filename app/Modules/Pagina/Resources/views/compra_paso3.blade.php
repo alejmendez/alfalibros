@@ -115,7 +115,6 @@
 				        <span class="help-block">Banco al cual realizó la transferencia</span>
 				    </div>
 					
-
 					<div class="form-group col-sm-12">
 					    <label for="monto" class="requerido">Comprobante de Transferencia</label>
 					    <div class="form-control">
@@ -125,8 +124,7 @@
 					    </div>
 				    </div>
 
-					
-					 <div class="form-group col-sm-12">
+					<div class="form-group col-sm-12">
 					    <label for="nota" class="requerido">Nota Adicional</label>
 				        <div class="form-control">
 				        	{{ $compras->nota}}
@@ -238,17 +236,22 @@
 	$("#datosBancosModal").modal();
 	
 	$('.confirma').click(function(){
+		location.href = $url_paso_4;
+		/*
 		setTimeout(function(){
 			location.href = $url_paso_4;
 		}, 3000);
+		*/
 	});
-/*
+	
+	/*
 	$('#cotizacion').click(function(){
 		
 		url_cotiza = "{{ route('pag.compra.cotizacion', [ 'codigo' => $codigo ]) }}";
   		window.open(url_cotiza, '_blank');
 	
-	});*/
+	});
+	*/
 
 	$('#form-confirmar').submit(function() { 
 		// submit the form 

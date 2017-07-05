@@ -7,7 +7,7 @@
 		<h3>{{ $producto->nombre }}</h3>
 		<div class="row">
 			<div class="col-md-3 col-sm-4 col-xs-12">
-				<img src="http://alfalibros.net/paneldelibros/index.php/app_files/view/{{ $producto->imagen }}" alt="" class="img-responsive" />
+				<img src="{{ $controller->urlphppos('app_files/view/' . $producto->imagen) }}" alt="" class="img-responsive" />
 			</div>
 			<div class="col-md-9 col-sm-8 col-xs-12">
 				<h4>

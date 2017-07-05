@@ -17,7 +17,7 @@
 					<div class="libro div-round div-card div-white">
 						<div class="libro-img">
 							<a href="{{ route('pag.producto', ['id' => $producto->id]) }}">
-								<img src="http://alfalibros.net/paneldelibros/index.php/app_files/view/{{ $producto->imagen }}" alt="" class="img-responsive" />
+								<img src="{{ $controller->urlphppos('app_files/view/' . $producto->imagen) }}" alt="" class="img-responsive" />
 							</a>
 						</div>
 						<h6 title="{{ preg_match('/libros/i', $producto->nombre) ? 

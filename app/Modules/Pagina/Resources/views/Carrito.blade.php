@@ -49,7 +49,7 @@
 			<tr v-for="producto in carrito">
 				<td>
 					<a :href="'{{ url('producto') }}/' + producto.id">
-						<img :src="'http://alfalibros.net/paneldelibros/index.php/app_files/view/' + producto.options.imagen" alt="" />
+						<img :src="'{{ $controller->urlphppos('app_files/view/') }}' + producto.options.imagen" alt="" />
 					</a>
 				</td>
 				<td>

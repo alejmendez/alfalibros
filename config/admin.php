@@ -3,7 +3,7 @@
 return [
 	'name'            => 'Admin',
 	'prefix'          => 'backend',
-	'libreriaEntorno' => 'externa', //interna, externa
+	'libreriaEntorno' => 'interna', //interna, externa
 	'grupos_apps'     => [
 		'Base'         => ['base'],
 	],
@@ -483,8 +483,18 @@ return [
 					'metronic/components-rounded.min.css',
 				],
 			],
+			'jquery-countdown'=> [
+				//'css'=> ['jquery-countdown/css/jquery.countdown.css'],
+				//'js'=> ['jquery-countdown/js/jquery.countdown.js'],
+				'js'=> ['jquery-countdown/js/jquery.countdown.min.js'],
+			],
 		],
 		'interna' => [
+			'components-metronic'=> [
+				'css'	=> [
+					'metronic/components-rounded.min.css',
+				],
+			],
 			'metronic' => [
 				'css' => [
 					'metronic/components.min.css',
@@ -945,7 +955,17 @@ return [
 				'js' => [
 					'jasny-bootstrap/js/jasny-bootstrap.min.js',
 				]
-			]
+			],
+			'components-metronic'=> [
+				'css'	=> [
+					'metronic/components-rounded.min.css',
+				],
+			],
+			'jquery-countdown'=> [
+				//'css'=> ['jquery-countdown/css/jquery.countdown.css'],
+				//'js'=> ['jquery-countdown/js/jquery.countdown.js'],
+				'js'=> ['jquery-countdown/js/jquery.countdown.min.js'],
+			],
 		],
 		'e-bolivar' => [
 			'metronic' => [

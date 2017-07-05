@@ -19,7 +19,7 @@
 			?>
 			<li id="{{ $producto->rowId }}" class="clearfix lh_large m_bottom_20 relative">
 				<a href="#" class="d_block f_left m_right_10">
-					<img src="http://alfalibros.net/paneldelibros/index.php/app_files/view/{{ $producto->options->imagen }}" alt="" style="max-width: 20px;" />
+					<img src="{{ $controller->urlphppos('app_files/view/' . $producto->options->imagen) }}" alt="" style="max-width: 20px;" />
 				</a>
 				<div class="f_left item_description lh_ex_small">
 					<a href="#" class="color_dark fs_medium d_inline_b m_bottom_3">{{ $producto->name }}</a>

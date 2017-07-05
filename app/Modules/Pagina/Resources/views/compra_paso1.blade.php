@@ -232,12 +232,19 @@ var direccion = $('#direccion_id').val();
 
 	$('#form-confirmar').submit(function() { 
 		// submit the form 
+		$("#btn_confirmar2").prop('disabled', true);
 		$(this).ajaxSubmit({
-			success : function(r){
+			error : function() {
+				$("#btn_confirmar2").prop('disabled', false);
+			},
+			success : function(r) {
+				location.href = $url_paso_2;
 				
+				/*
 				setTimeout(function(){
 					location.href = $url_paso_2;
 				}, 3000);
+				*/
 
 			}
 		}); 

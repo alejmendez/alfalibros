@@ -75,10 +75,22 @@ class CompraController extends Controller
 				]);
 			}
 
+			if($paso == 3 && $compras->estatus == 0){
+				$this->resetearTiempo($codigo);
+				$compras    = Compras::where('codigo', $codigo)->first();
+			}
+
 			if ($paso == 1){
 				$compras->cedula = $compras->cedula != '' ?
 					$compras->cedula : 
 					$usuario->persona->cliente->account_number;
+			}elseif ($paso == 2) {
+				$this->css[] = 'pagina/imprimir-cotizacion.css';
+			}elseif ($paso == 3) {
+				$apartado = $this->apartarArticulo($codigo);
+				if ($apartado !== true) {
+					return $apartado;
+				}
 			}
 			
 			$compras_suspendida = $this->compras_suspendidas($codigo);
@@ -90,15 +102,6 @@ class CompraController extends Controller
 					'productos'          => $productos,
 				]);
 			}
-
-			if($paso == 3 && $compras->estatus == 0){
-				
-				$this->resetearTiempo($codigo);
-				$compras    = Compras::where('codigo', $codigo)->first();
-			}
-
-			
-
 		}else{
 			$compras = Compras::where('estatus', 0)->where('usuario_id', $usuario->id)->paginate($this->paginado);
 			$compras_suspendida = Compras::where('estatus', 1)->where('usuario_id', $usuario->id)->paginate($this->paginado);
@@ -299,11 +302,6 @@ class CompraController extends Controller
 
 	public function confirmar(Request $request, $codigo = '')
 	{
-		$apartado = $this->apartarArticulo($codigo);
-		if(!$apartado){
-			return 'Se generó un error al registrar la compra, inténtelo más tarde.';
-		}
-
 		DB::beginTransaction();
 		DB::connection('phppos')->beginTransaction();
 		try {
@@ -434,6 +432,7 @@ class CompraController extends Controller
 				$venta['sale_time'] = Carbon::now();
 
 				$venta = Venta::create($venta);
+				$errores = [];
 
 				foreach ($productos as $producto) {
 					$producto = $producto->toArray();
@@ -454,11 +453,30 @@ class CompraController extends Controller
 					/*
 					Restar del inventario
 					*/
-					DB::connection('phppos')
+					$_producto = Producto::find($producto->item_id);
+
+					$cantidad = DB::connection('phppos')
                         ->table('phppos_location_items')
                         ->where('item_id', $producto['item_id'])
                         ->where('location_id', $this->location_id())
-                        ->decrement('quantity', $producto['quantity_purchased']);
+						->first();
+
+
+					if ($cantidad->quantity >= $producto['quantity_purchased']) {
+                    	$cantidad = DB::connection('phppos')
+							->table('phppos_location_items')
+							->where('item_id', $producto['item_id'])
+							->where('location_id', $this->location_id())
+							->decrement('quantity', $producto['quantity_purchased']);
+					} else {
+						$errores[] = 'La cantidad de "' .
+							$_producto->name . 
+							'" solicitada no se encuentra disponible';
+					}
+				}
+				
+				if (count($errores) > 0) {
+					throw new Exception(implode(', ', $errores) . '.');
 				}
 				
 				$compra->sale_id = $venta->sale_id;
@@ -467,15 +485,14 @@ class CompraController extends Controller
 			} catch (Exception $e) {
 				DB::rollback();
 				DB::connection('phppos')->rollback();
-				return false;
+				return $e->getMessage();
 			}
 
 			DB::commit();
 			DB::connection('phppos')->commit();
 		}
+
 		return true;
-
-
 	}
 
 	public function cotizacion(Request $request, $codigo = 0){
@@ -495,9 +512,11 @@ class CompraController extends Controller
 			->whereNull('bancos_id')
 			->where('aprobado', 0)
 			->get();
+		
 		foreach ($eliminar as $elimina) {
 			$elimina->delete();
 		}
+
 		if (preg_match('/[a-z0-9]{80}/i', $codigo)) {
 			$compras    = Compras::where('codigo', $codigo)->first();
 			$compras_suspendida = Compras::where('estatus', 1)
@@ -549,21 +568,21 @@ class CompraController extends Controller
 	public function resetearTiempo($codigo){
 		$compras = Compras::where('codigo', $codigo)->where('estatus', 0)->first();
 		$dbDefault = \Config::get('database.default');
-		$venta = Venta::on($dbDefault)->find($compras->sale_id);
 		
 		if($compras){
-			$compras->created_at =  Carbon::now()->format('Y-m-d H:i:s');
+			$venta = Venta::on($dbDefault)->find($compras->sale_id);
+			
+			$compras->created_at =  Carbon::now()->addSecounds(10)->format('Y-m-d H:i:s');
 			$compras->estatus = 1;
 			$compras->save();
 
 			$venta->update([
-				'sale_time' => Carbon::now()->format('Y-m-d H:i:s')
+				'sale_time' => Carbon::now()->addSecounds(10)->format('Y-m-d H:i:s')
 			]);
+			
 			return true;
 		}
-		 return false;
+
+		return false;
 	}
-
-
-
 }

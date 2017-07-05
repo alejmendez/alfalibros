@@ -22,7 +22,8 @@ class ConfiguracionSeeder extends Seeder
 			'miles'          => '.',
 			'email'          => 'admin@tumundoclick.com.ve',
 			'email_name'     => 'Tumundoclick',
-			'nombre_empresa' => 'Vallee alfalibros y Asociados'
+			'nombre_empresa' => 'Alfalibros.com',
+			'warehouse'      => '2',
     	];
 
     	foreach ($configuraciones as $propiedad => $valor) {

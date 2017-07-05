@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 //Modelos
 use alfalibros\Modules\Base\Models\Compras;
 use alfalibros\Modules\Base\Models\Bancos;
+use alfalibros\Modules\Base\Models\MetodoEnvio;
+use alfalibros\Modules\Base\Models\UsuarioDireccion;
 use alfalibros\Modules\Pagina\Models\Producto;
 use alfalibros\Modules\Pagina\Models\Venta;
 use alfalibros\Modules\Pagina\Models\VentaDetalle;
@@ -22,7 +24,9 @@ class CompraController extends Controller
 	protected $paginado = 5;
 	
 	public $librerias = [
-		'components-metronic'
+		'components-metronic',
+		'jquery-countdown',
+		'maskedinput'
 	];
 
 	public function ver(Request $request, $codigo = 0, $paso = 1)
@@ -44,16 +48,13 @@ class CompraController extends Controller
 			->whereNull('bancos_id')
 			->where('aprobado', 0)
 			->get();
+		
 		foreach ($eliminar as $elimina) {
 			$elimina->delete();
 		}
 
 		if (preg_match('/[a-z0-9]{80}/i', $codigo)) {
 			$compras    = Compras::where('codigo', $codigo)->first();
-			$compras_suspendida = Compras::where('estatus', 1)
-				->where('usuario_id', $usuario->id)
-				->where('codigo', '!=', $codigo)
-				->count();
 
 			if(!$compras){
 				return $this->view('pagina::CompraAnulada', [
@@ -73,6 +74,30 @@ class CompraController extends Controller
 					'compra' => $compras,
 				]);
 			}
+
+			if ($paso == 1){
+				$compras->cedula = $compras->cedula != '' ?
+					$compras->cedula : 
+					$usuario->persona->cliente->account_number;
+			}
+			
+			$compras_suspendida = $this->compras_suspendidas($codigo);
+			
+			if($paso >= 3 && $compras_suspendida >= 1){
+				return $this->view('pagina::compra_suspendida', [
+					'compras'            => $compras,
+					'compras_suspendida' => $compras_suspendida,
+					'productos'          => $productos,
+				]);
+			}
+
+			if($paso == 3 && $compras->estatus == 0){
+				
+				$this->resetearTiempo($codigo);
+				$compras    = Compras::where('codigo', $codigo)->first();
+			}
+
+			
 
 		}else{
 			$compras = Compras::where('estatus', 0)->where('usuario_id', $usuario->id)->paginate($this->paginado);
@@ -248,12 +273,12 @@ class CompraController extends Controller
 			];
 
 			if ($request->ip() != "::1") {
-				/*
+				
 				\Mail::send("pagina::emails.mensaje", $datosCorreo, function($message) use($usuario) {
 					$message->from('no_responder@alfalibros.com', 'Alfalibros.com');
 					$message->to($usuario->persona->email, $usuario->persona->full_name)
 						->subject("Compra en Alfalibros.com");
-				});*/
+				});
 			}
 
 			Cart::destroy();
@@ -292,10 +317,10 @@ class CompraController extends Controller
 				$file->move($path, $name);
 				$filename = $name;
 
-				chmod($filename, 0777);
+				chmod($path.'/'.$filename, 0777);
 				$data['comprobante'] = $filename;
 			}
-dd('sdjfbs');
+			
 			$compra = Compras::where('codigo', $codigo)->firstOrFail();
 
 			$compra->fill($data)->save();
@@ -341,10 +366,16 @@ dd('sdjfbs');
 		return Bancos::all()->pluck('banco', 'id');
 	}
 
-	public function facturacion(Request $request){
+	public function facturacion(Request $request)
+	{
 		//$data    =  $request;
 		$compras = Compras::where('codigo', $request->codigo)->first();
-		$compras->fill($request->all())->save();
+		$compras->direccion_id    = $request->direccion_id;
+		$compras->metodo_envio_id = $request->metodo_envio_id;
+		$compras->nombre          = $request->nombre;
+		$compras->direccion       = $request->direccion;
+		$compras->save();
+		
 
 		$salida = [ 's'=> 'n', 'msj' => 'No se pudo realizar la Facturación'];
 
@@ -354,7 +385,18 @@ dd('sdjfbs');
 		return $salida;
 	}
 
-	public function apartarArticulo($codigo){
+	protected function compras_suspendidas($codigo)
+	{
+		$usuario = auth()->user();
+
+		return Compras::where('estatus', 1)
+			->where('usuario_id', $usuario->id)
+			->where('codigo', '!=', $codigo)
+			->count() >= 1;
+	}
+
+	public function apartarArticulo($codigo)
+	{
 		$usuario = auth()->user();
 		$compra = Compras::where('codigo', $codigo)->firstOrFail();
 		/*
@@ -438,7 +480,7 @@ dd('sdjfbs');
 
 	public function cotizacion(Request $request, $codigo = 0){
 		$usuario = auth()->user();
-
+		
 		$productos          = [];
 		$compras            = [];
 		$compras_suspendida = [];
@@ -487,6 +529,9 @@ dd('sdjfbs');
 			$compras_suspendida = Compras::where('estatus', 1)->where('usuario_id', $usuario->id)->paginate($this->paginado);
 		}
 
+		$compras->metodo_envio = MetodoEnvio::where('id', $compras->metodo_envio_id)->first()->nombre;
+		$compras->direccion_envio = UsuarioDireccion::where('id', $compras->direccion_id)->first()->direccion;
+
 		return $this->view('pagina::cotizacion', [
 			'codigo'             => $codigo,
 			'bancos'             => Bancos::all(),
@@ -495,6 +540,28 @@ dd('sdjfbs');
 			'productos'          => $productos,
 			'total'              => 0
 		]);
+	}
+
+	public function metodoEnvio(){
+		return MetodoEnvio::pluck('nombre', 'id');
+	}
+
+	public function resetearTiempo($codigo){
+		$compras = Compras::where('codigo', $codigo)->where('estatus', 0)->first();
+		$dbDefault = \Config::get('database.default');
+		$venta = Venta::on($dbDefault)->find($compras->sale_id);
+		
+		if($compras){
+			$compras->created_at =  Carbon::now()->format('Y-m-d H:i:s');
+			$compras->estatus = 1;
+			$compras->save();
+
+			$venta->update([
+				'sale_time' => Carbon::now()->format('Y-m-d H:i:s')
+			]);
+			return true;
+		}
+		 return false;
 	}
 
 

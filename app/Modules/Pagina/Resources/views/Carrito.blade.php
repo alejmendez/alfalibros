@@ -63,7 +63,7 @@
 					Bs. @{{ number_format(producto.price, 2, ',', '.') }}
 				</td>
 				<td class="text-center">
-					<input type="number" v-model="producto.qty" min="1" :max="producto.options.cantidad" />
+					<input type="number" v-model="producto.qty" min="1" :max="producto.options.cantidad" :title="app.max(producto.options.cantidad)" data-toggle="tooltip"/>
 				</td>
 				<td>
 					@{{ number_format(producto.qty * producto.price, 2, ',', '.') }}

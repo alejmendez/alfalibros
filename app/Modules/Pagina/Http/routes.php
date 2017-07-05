@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => 'web', 'namespace' => 'alfalibros\\Modules\Pagina\Http\Controllers'], function() {
+Route::group(['middleware' => 'web', 'namespace' => 'alfalibros\Modules\Pagina\Http\Controllers'], function() {
 	// controlador de productos
 	Route::get('/', 									'ProductoController@index')->name('pag.index');
 	Route::get('producto/{id}', 						'ProductoController@producto')->name('pag.producto');
@@ -16,6 +16,7 @@ Route::group(['middleware' => 'web', 'namespace' => 'alfalibros\\Modules\Pagina\
 	// controlador de usuarios
 	Route::group(['prefix' => 'usuarios'], function() {
 		Route::get('nuevo', 							'UsuariosController@usuarios')->name('pag.usuarios.nuevo');
+		Route::get('registrado', 						'UsuariosController@registrado')->name('pag.usuarios.registrado');
 		Route::post('registrar', 						'UsuariosController@registrar')->name('pag.usuarios.registrar');
 		Route::get('recuperar/clave', 					'UsuariosController@recuperar')->name('pag.usuarios.recuperar.clave');
 		Route::post('recuperar/clave', 					'UsuariosController@recuperar')->name('pag.usuarios.recuperar.clave');

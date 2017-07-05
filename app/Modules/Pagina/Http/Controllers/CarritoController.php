@@ -18,14 +18,14 @@ use alfalibros\Modules\Pagina\Models\VentaDetalle;
 
 class CarritoController extends Controller 
 {
-	public $librerias = ['vue'];
+	public $librerias = ['vue','jquery-countdown'];
 	public $js = ['carrito.js'];
 
 	public function index()
 	{
 		$this->setTitulo('Carrito de Compras');
 		$usuario = auth()->user();
-		if (!$usuario) {
+		if (!$usuario){
 			return redirect('login');
 		}
 		

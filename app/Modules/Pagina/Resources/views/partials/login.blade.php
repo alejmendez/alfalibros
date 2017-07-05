@@ -1,6 +1,11 @@
 	<div id="login-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
 		<div class="modal-dialog">
 			<div class="loginmodal-container">
+								
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span >&times;</span>
+				</button>
+				
 				<h1>Iniciar sesi&oacute;n</h1><br>
 				{!! Form::open([
 					'url'            => 'login', 
@@ -12,8 +17,8 @@
 					'role'           => 'form',
 				]) !!}
 					<div class="form-group">
-						<label for="login-usuario">Correo</label>
-						<input id="login-usuario" name="usuario" class="form-control" placeholder="" required="" type="text" title="Correo" data-toggle="tooltip"/>
+						<label for="login-usuario">Correo Electr&oacute;nico</label>
+						<input id="login-usuario" name="usuario" class="form-control" placeholder="" required="" type="text" title="Usuario" data-toggle="tooltip"/>
 					</div>
 					<div class="form-group">
 						<label for="login-password">Contrase&ntilde;a</label>

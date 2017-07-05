@@ -24,7 +24,7 @@
 						<div class="col-sm-6 col-sm-offset-3">
 							{!! Form::bsText('usuario', '', [
 								'label'       => false,
-								'placeholder' => 'Correo',
+								'placeholder' => 'Correo Electrónico',
 								'class_cont'  => 'col-sm-12'
 							]) !!}
 

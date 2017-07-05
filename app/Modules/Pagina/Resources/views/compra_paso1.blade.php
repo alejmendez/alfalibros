@@ -13,29 +13,35 @@
 					{!! Form::hidden('codigo', $compras->codigo) !!}
 						<div class="form-group col-xs-12">
 							<label for="direccion_id">
-								Seleccione Dirección: 
+								Dirección de envío: 
 								<i class="fa fa-plus" data-ele="direccion_id" data-toggle="modal" data-target="#nuevaDireccionModal" title="Registrar una Dirección">&nbsp; Agregar</i>
 							</label>
 
 							{!! Form::select('direccion_id', $usuario->direcciones->pluck('nombre_direccion', 'id'), $compras->direccion_id, [
 								'id'	=> 'direccion_id',
-								'placeholder' => '- Seleccione una direccion',
+								'placeholder' => '- Seleccione una direccion de envío',
 								'required'    => true,
 								'class'	=> 'form-control'
 							]) !!}
 							
 
 						</div>
-
-
 						
-						<!--
+						<div class="form-group col-xs-12">
+							<label for="metodo_envio_id">
+								Método de Envío:
+							</label>
 
-						<div class="form-group col-sm-12 text-right">
-							<button id="btn_confirmar" type="submit" class="btn btn-success btn-lg">
-								Confirmar <i class="fa fa-thumbs-up"></i>
-							</button>
-						</div>-->
+							{!! Form::select('metodo_envio_id', $controller->metodoEnvio(), $compras->metodo_envio_id, [
+								'id'	=> 'metodo_envio_id',
+								'placeholder' => '- Seleccione un método de envío',
+								'required'    => true,
+								'class'	=> 'form-control'
+							]) !!}
+							
+
+						</div>
+	
 					
 				</div>
 
@@ -43,64 +49,49 @@
 					<div class="col-xs-12">
 						<h4>Datos de Facturación</h4>
 					</div>
-					@if($compras->nombre != '')
-						{!! Form::bsText('nombre', $compras->nombre , [
-							'label'       => 'Nombre',
-							'placeholder' => 'Razon Social o Nombre',
-							'help'        => 'Razon Social o Nombre del Cliente',
-							'required'    => true,
-							'class_cont'  => 'col-sm-12'
-						]) !!}
-					@else
-						{!! Form::bsText('nombre', $usuario->persona->full_name, [
-							'label'       => 'Nombre',
-							'placeholder' => 'Razon Social o Nombre',
-							'help'        => 'Razon Social o Nombre del Cliente',
-							'required'    => true,
-							'class_cont'  => 'col-sm-12'
-						]) !!}
-					@endif
 
-
-					@if($compras->cedula != '')
-						{!! Form::bsText('cedula', $compras->cedula, [
-							'label'       => 'Cédula',
-							'placeholder' => 'RIF/C.I',
-							'help'        => 'RIF/C.I del Cliente',
-							'required'    => true,
-							'class_cont'  => 'col-sm-12'
-						]) !!}
-					@else
-						{!! Form::bsText('cedula', $usuario->persona->cliente->account_number, [
-							'label'       => 'Cédula',
-							'placeholder' => 'RIF/C.I',
-							'help'        => 'RIF/C.I del Cliente',
-							'required'    => true,
-							'class_cont'  => 'col-sm-12'
-						]) !!}
-					@endif
+					{!! Form::bsText('nombre', $compras->nombre != '' ? $compras->nombre  : $usuario->persona->full_name, [
+						'label'       => 'Razon Social',
+						'placeholder' => 'Razon Social o Nombre',
+						'help'        => 'Razon Social o Nombre del Cliente',
+						'required'    => true,
+						'class_cont'  => 'col-sm-12'
+					]) !!}
 					
-
+					<div class="form-group col-sm-12">
+						<label for="cedula" class="requerido">C&eacute;dula o Rif</label>
+						<input id="cedula" nombre="cedula" type="hidden" value="{{ strtoupper($compras->cedula) }}" />
+						
+						<div class="input-group">
+							<div class="input-group-btn">
+								<button id="nacionalidad" type="button" class="btn green dropdown-toggle" data-toggle="dropdown">
+									<span>{{ strtoupper(substr($compras->cedula, 0, 1)) }}</span>
+									<i class="fa fa-angle-down"></i>
+								</button>
+								<ul class="dropdown-menu">
+									@foreach(['V', 'E', 'J', 'G'] as $nacionalidad)
+									<li>
+										<a href="javascript:nacionalidad('{{ $nacionalidad }}');"> {{ $nacionalidad }} </a>
+									</li>
+									@endforeach
+								</ul>
+							</div>
+							<input class="cedula form-control" placeholder="RIF/C.I" required id="cedula_input" type="text" value="{{ substr($compras->cedula, 1) }}">
+						</div>
+						<!-- /btn-group -->
+						
+						<span class="help-block">RIF/C.I del Cliente ejemplo: V15467845, J854575640, E8897547</span>
+					</div>
 					
-					@if($compras->direccion != '')
-						{!! Form::bsTextarea('direccion', $compras->direccion, [
-							'label'       => 'Dirección Fiscal',
-							'placeholder' => 'Dirección Fiscal',
-							'help'        => 'Dirección Fiscal',
-							'required'    => true,
-							'rows'        => 3,
-							'class_cont'  => 'col-sm-12'
-						]) !!}
-					@else
-						{!! Form::bsTextarea('direccion', $usuario->persona->address_1, [
-							'label'       => 'Dirección Fiscal',
-							'placeholder' => 'Dirección Fiscal',
-							'help'        => 'Dirección Fiscal',
-							'required'    => true,
-							'rows'        => 3,
-							'class_cont'  => 'col-sm-12'
-						]) !!}
-					@endif
+		
+					{!! Form::bsTextarea('direccion', $compras->direccion != '' ? $compras->direccion :  $usuario->persona->address_1, [
+						'label'       => 'Dirección Fiscal',
+						'placeholder' => 'Dirección Fiscal',
+						'help'        => 'Dirección Fiscal',
+						'required'    => true,
+						'rows'        => 3,
+						'class_cont'  => 'col-sm-12'
+					]) !!}
 
 					<div class="form-group col-sm-12 text-right">
 						<button id="btn_confirmar2" type="submit" class="btn btn-success btn-lg">
@@ -130,8 +121,8 @@
 
 
 						{!! Form::bsText('nombre', '', [
-							'label'       => 'Nombre de Dirección',
-							'placeholder' => 'Nombre de Dirección',
+							'label'       => 'Nombre (Para uso personal)',
+							'placeholder' => 'Nombre ',
 							'required'    => true,
 							'class_cont'  => 'col-sm-12'
 						]) !!}
@@ -226,6 +217,16 @@
 @endpush
 @push('js')
 <script type="text/javascript">
+var direccion = $('#direccion_id').val();
+	$.mask.definitions['R']='[JGVEjgve]';
+	$(".cedula").mask("999999?999");
+	$('#cedula_input').on('blur',function(){
+		 nacionalidad($("#nacionalidad span").text());
+	});
+	if( !direccion ){
+		$('#cotizacion').remove();
+	}
+
 	$("#datosBancosModal").modal();
 	var $url_paso_2 = "{{ route('pag.compra.ver', [ 'codigo' => $codigo, 'paso' => 2 ]) }}";
 
@@ -251,6 +252,8 @@
 			success : function(r){
 				if(r.s == 's'){
 					$("#nuevaDireccionModal").modal('hide');
+					$('#direccion_id').append('<option value=' + r.id + '>' + r.nombre + '</option>');
+					$('#direccion_id').val(r.id);
 				}else{
 					alert(r.msj);
 					return false;
@@ -262,6 +265,10 @@
 		return false; 
 	});
 
-	
+	function nacionalidad(nac){
+		nac = nac || $("#nacionalidad span").text();
+		$("#nacionalidad span").text(nac);
+		$("#cedula").val(nac + $("#cedula_input").val());
+	}
 </script>
 @endpush

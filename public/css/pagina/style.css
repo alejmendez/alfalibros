@@ -2,33 +2,33 @@ body{
 	background-color: #F5F7F8;
 }
 
-.container-body {
+.container {
 	padding-top: 65px;
 }
 
 .navbar-inverse {
-	background-color: #4D636F;
-	border: none;
+    background-color: #4D636F;
+    border: none;
 }
 
 .navbar-inverse .navbar-nav>li>a {
-	color: #fff;
+    color: #fff;
 }
 
 .navbar-inverse .navbar-nav>li>a:focus, 
 .navbar-inverse .navbar-nav>li>a:hover {
-	color: #000;
-	background-color: #fff;
+    color: #000;
+    background-color: #fff;
 }
 
 .dropdown-submenu {
-	position: relative;
+    position: relative;
 }
 
 .dropdown-submenu .dropdown-menu {
-	top: 0;
-	left: 100%;
-	margin-top: -1px;
+    top: 0;
+    left: 100%;
+    margin-top: -1px;
 }
 
 .div-card{
@@ -42,7 +42,7 @@ body{
 .contenido .col-sm-6,
 .contenido .col-xs-12{
 	padding-right: 5px;
-	padding-left: 5px;
+    padding-left: 5px;
 }
 
 .contenido img {
@@ -56,12 +56,12 @@ body{
 }
 
 .div-white{
-	color: #000!important;
-	background-color: #fff!important;
+    color: #000!important;
+    background-color: #fff!important;
 }
 
 .div-round{
-	border-radius: 4px!important;
+    border-radius: 4px!important;
 }
 
 .center-ele{
@@ -108,44 +108,44 @@ footer a:hover,footer a:active,footer a:focus{
 }
 
 #login-dp{
-	min-width: 250px;
-	padding: 14px 14px 0;
-	overflow:hidden;
-	background-color:#fff;
+    min-width: 250px;
+    padding: 14px 14px 0;
+    overflow:hidden;
+    background-color:#fff;
 }
 #login-dp .help-block{
-	font-size:12px    
+    font-size:12px    
 }
 #login-dp .bottom{
-	background-color:#fff;
-	border-top:1px solid #ddd;
-	clear:both;
-	padding:14px;
+    background-color:#fff;
+    border-top:1px solid #ddd;
+    clear:both;
+    padding:14px;
 }
 #login-dp .social-buttons{
-	margin:12px 0    
+    margin:12px 0    
 }
 #login-dp .social-buttons a{
-	width: 49%;
+    width: 49%;
 }
 #login-dp .form-group {
-	margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 .btn-fb{
-	color: #fff;
-	background-color:#3b5998;
+    color: #fff;
+    background-color:#3b5998;
 }
 .btn-fb:hover{
-	color: #fff;
-	background-color:#496ebc 
+    color: #fff;
+    background-color:#496ebc 
 }
 .btn-tw{
-	color: #fff;
-	background-color:#55acee;
+    color: #fff;
+    background-color:#55acee;
 }
 .btn-tw:hover{
-	color: #fff;
-	background-color:#59b5fa;
+    color: #fff;
+    background-color:#59b5fa;
 }
 
 .bootbox-body{
@@ -245,14 +245,14 @@ footer a:hover,footer a:active,footer a:focus{
 }
 
 @media(max-width:768px){
-	#login-dp{
-		background-color: inherit;
-		color: #fff;
-	}
-	#login-dp .bottom{
-		background-color: inherit;
-		border-top:0 none;
-	}
+    #login-dp{
+        background-color: inherit;
+        color: #fff;
+    }
+    #login-dp .bottom{
+        background-color: inherit;
+        border-top:0 none;
+    }
 }
 
 @media only screen and (min-width: 601px){
@@ -279,7 +279,7 @@ footer a:hover,footer a:active,footer a:focus{
 
 @media (min-width: 1340px){
 	.container {
-		width: 1330px;
+	    width: 1330px;
 	}
 
 	.contenido .libro-img {
@@ -293,10 +293,17 @@ footer a:hover,footer a:active,footer a:focus{
 
 @media (min-width: 1400px){
 	.container {
-		width: 1370px;
+	    width: 1370px;
 	}
 
 	.contenido .libro-img {
 		min-height: 270px;
 	}
+}
+
+@media (min-width: 768px){
+    .modal-dialog {
+        width: 335px;
+        margin: 30px auto;
+    }
 }

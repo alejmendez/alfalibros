@@ -6,6 +6,7 @@ use DB;
 use alfalibros\Modules\Base\Models\Modelo;
 
 use alfalibros\Modules\Base\Models\Bancos;
+use alfalibros\Modules\Base\Models\MetodoEnvio;
 use alfalibros\Modules\Pagina\Models\Producto;
 use alfalibros\Modules\Pagina\Models\Venta;
 use alfalibros\Modules\Pagina\Models\VentaDetalle;
@@ -24,6 +25,7 @@ class Compras extends Modelo
         "correo",
         "direccion_id",
         "direccion",
+        "metodo_envio_id",
         "nota",
         "codigo_transferencia",
         "banco_usuario",
@@ -60,6 +62,12 @@ class Compras extends Modelo
             'label'       => 'Bancos',
             'placeholder' => '- Seleccione un Bancos',
             'url'         => 'bancos'
+        ],
+        'metodo_envio_id' => [
+            'type'        => 'select',
+            'label'       => 'Método de envio',
+            'placeholder' => '- Seleccione un Método de envio',
+            'url'         => 'metodo_envio'
         ],
         'nombre' => [
             'type'        => 'text',
@@ -117,6 +125,8 @@ class Compras extends Modelo
     {
         parent::__construct($attributes);
         $this->campos['bancos_id']['options'] = Bancos::pluck('nombre', 'id');
+        $this->campos['metodo_envio_id']['options'] = MetodoEnvio::pluck('nombre', 'id');
+        
     }
 
     public static function boot(){
@@ -130,14 +140,26 @@ class Compras extends Modelo
                 VentaDetalle::on($dbDefault)->where('sale_id', $model->sale_id)->delete();
                 Venta::on($dbDefault)->where('sale_id', $model->sale_id)->delete();
             } else {
-                $detalles = VentaDetalle::where('sale_id', $model->sale_id)->get();
-                foreach ($detalles as $detalle) {
-                    DB::connection('phppos')
-                        ->table('phppos_location_items')
-                        ->where('item_id', $detalle->item_id)
-                        ->where('location_id', 1)
-                        ->increment('quantity', $detalle->quantity_purchased);
+                $venta = Venta::where('sale_id', $model->sale_id)->first();
+                if (!$venta) {
+                    return;
                 }
+
+                if ($venta->deleted != 1){
+                    $detalles = VentaDetalle::where('sale_id', $model->sale_id)->get();
+
+                    foreach ($detalles as $detalle) {
+                        DB::connection('phppos')
+                            ->table('phppos_location_items')
+                            ->where('item_id', $detalle->item_id)
+                            ->where('location_id', 1)
+                            ->increment('quantity', $detalle->quantity_purchased);
+                    }
+                }
+
+                $venta->deleted = 1;
+                $venta->save();
+
 
                 /*
                 DB::connection('phppos')
@@ -145,10 +167,10 @@ class Compras extends Modelo
                     ->where('sale_id', $model->sale_id)
                     ->delete();
                 VentaDetalle::where('sale_id', $model->sale_id)->delete();
-                */
                 Venta::where('sale_id', $model->sale_id)->update([
                     'deleted' => 1
                 ]);
+                */
             }
 
             return true;
@@ -174,4 +196,5 @@ class Compras extends Modelo
     {
         return $this->hasOne('alfalibros\Modules\Pagina\Models\Venta', 'sale_id', 'sale_id');
     }
+
 }

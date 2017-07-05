@@ -23,6 +23,7 @@ class ProductoController extends Controller
 	public function categoria($id)
 	{
 		$this->setTitulo('Categorias');
+		
 		$productos = $this->productoQB()
 			->where('phppos_categories.id', $id)
 			->paginate($this->paginar);
@@ -38,11 +39,13 @@ class ProductoController extends Controller
 			->where('phppos_categories.id', $id)
 			->where('phppos_categories.deleted', 0)
 			->where('phppos_items.deleted', 0)
-			->whereNotNull('phppos_items.image_id')
+			->whereRaw('(select image_id from phppos_item_images where phppos_item_images.item_id = phppos_items.item_id limit 1) is not null')
+			//->whereNotNull('phppos_items.image_id')
 			->groupBy('phppos_categories.id', 'phppos_categories.name')
 			->first();
 
-		
+		//dd($categoria);
+
 		if (!$categoria){
 			abort(404);
 		}

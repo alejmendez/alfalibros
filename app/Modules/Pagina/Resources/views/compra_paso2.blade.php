@@ -49,23 +49,68 @@
 					</tbody>
 				</table>
 			</div>
-
-			@if (is_null($compras->bancos_id) && $compras_suspendida == 0)
-			<div class="text-right">
-				<a href="{{ route('pag.compra.ver', [ 'codigo' => $codigo, 'paso' => 3 ]) }}" class="btn btn-info btn-pagar">
-					<i class="fa fa-check" aria-hidden="true"></i> Pagar Ahora 
-				</a>
-			</div>
-			@else
+			@if($compras_suspendida > 0)
 				<div class="text-right">
-					<a href="{{ route('pag.compra.ver', [ 'codigo' => $codigo, 'paso' => 3 ]) }}" class="btn btn-info">
-						<i class="fa fa-chevron-right" aria-hidden="true"></i> Siguiente 
+					<a href="#" class="btn btn-info btn-disabled" disabled>
+						<i class="fa fa-check" aria-hidden="true"></i> Pagar Ahora 
 					</a>
 				</div>
+			@else
+				@if (is_null($compras->bancos_id) && $compras_suspendida == 0)
+					<div class="text-right">
+						<a href="{{ route('pag.compra.ver', [ 'codigo' => $codigo, 'paso' => 3 ]) }}" class="btn btn-info btn-pagar">
+							<i class="fa fa-check" aria-hidden="true"></i> Pagar Ahora 
+						</a>
+					</div>
+				@else
+					<div class="text-right">
+						<a href="{{ route('pag.compra.ver', [ 'codigo' => $codigo, 'paso' => 3 ]) }}" class="btn btn-info">
+							<i class="fa fa-chevron-right" aria-hidden="true"></i> Siguiente 
+						</a>
+					</div>
+				@endif
 			@endif
 		@else
 			@include('pagina::partials.no-login')
 		@endif
+	</div>
+</div>
+
+<div id="informacionModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="informacionModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="informacionModalLabel">Información.</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					@if($compras_suspendida > 0)
+						<div class="col-sm-12 text-center">
+							<i class="fa fa-info-circle fa-5x gracias" style="text-align: center;padding: 50px;"></i> <br> <br>
+							<p class="text-center" style="text-align: center;">
+								<h3>Disculpe... </h3>
+								<br>
+								Usted tiene compras pendientes por aprobar o concretar, debe esperar a que se culmine el proceso de aprobación
+							</p>
+						</div>
+					@else
+						<div class="col-sm-12 text-center">
+							<i class="fa fa-info-circle fa-5x gracias" style="text-align: center;padding: 50px;"></i> <br> <br>
+							<p class="text-center" style="text-align: center;">
+								<h3>Información</h3>
+								<br>
+								Verifique todos los productos en antes de realizar su compra y proceda a realizar el pago de la misma.
+							</p>
+						</div>
+					@endif
+				</div>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+			</div>
+		</div>
 	</div>
 </div>
 
@@ -88,7 +133,7 @@
 @endpush
 @push('js')
 <script type="text/javascript">
-	$("#datosBancosModal").modal();
+	$("#informacionModal").modal();
 
 	$('#form-confirmar').submit(function() { 
 		// submit the form 

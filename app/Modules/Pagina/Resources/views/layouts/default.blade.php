@@ -9,7 +9,7 @@
 <body>
 	@include('pagina::partials.page-header')
 
-	<div class="container" style="margin-top: 50px;">
+	<div class="container">
 		@yield('content')
 	</div>
 	

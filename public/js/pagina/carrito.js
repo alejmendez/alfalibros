@@ -52,11 +52,13 @@ Vue.component('carrito-table', {
 var app = new Vue({
 	el: '#app-carrito',
 	data: {
-		carrito: []
+		carrito: [],
+		bloquear: false
 	},
 	methods: {
 		actualizar: function (event) {
 			var t = this;
+			t.$data.bloquear = true;
 			$.ajax({
 				url: $url + 'recargar',
 				data: {
@@ -71,8 +73,12 @@ var app = new Vue({
 					} else {
 						aviso(r.errores);
 					}
+					t.$data.bloquear = false;
 				}
 			});
+		},
+		max: function (max) {
+			return 'La cantidad máxima es ' + max;
 		},
 		eliminar: function (rowid, id) {
 			var t = this;
@@ -87,10 +93,10 @@ var app = new Vue({
 		},
 		comprar: function (event) {
 			var t = this;
-
 			if (t.$data.carrito.length == 0) {
 				return;
 			}
+			t.$data.bloquear = true;
 
 			$.ajax({
 				url: $url + 'comprar',
@@ -105,6 +111,7 @@ var app = new Vue({
 
 					if (r.errores) {
 						alert(r.errores);
+						t.$data.bloquear = false;
 						return;
 					}
 					

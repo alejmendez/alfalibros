@@ -45,6 +45,11 @@
 			'name'			=> 'conf[miles]',
 			'label'     	=> 'Separador de miles:'
 		]) }}
+
+		{{ Form::bsSelect('warehouse',$controller->warehouse(), $controller->conf('warehouse'), [
+			'name'			=> 'conf[warehouse]',
+			'label'     	=> 'Almacén:'
+		]) }}
 	</div>
 	<div class="row">
 		<h2>Imagenes</h2>

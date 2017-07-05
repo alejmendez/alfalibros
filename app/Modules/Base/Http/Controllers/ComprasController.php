@@ -19,6 +19,8 @@ use alfalibros\Modules\Base\Models\Compras;
 use alfalibros\Modules\Base\Models\Usuario;
 use alfalibros\Modules\Pagina\Models\Venta;
 use alfalibros\Modules\Pagina\Models\VentaDetalle;
+use alfalibros\Modules\Base\Models\UsuarioDireccion;
+use alfalibros\Modules\Base\Models\MetodoEnvio;
 
 class ComprasController extends Controller
 {
@@ -40,7 +42,8 @@ class ComprasController extends Controller
     public function index()
     {
         return $this->view('base::Compras', [
-            'Compras' => new Compras()
+            'Compras' => new Compras(),
+            'Envio'=> new UsuarioDireccion(),
         ]);
     }
 
@@ -69,11 +72,22 @@ class ComprasController extends Controller
         } else {
             $Compras = Compras::find($id);
         }
+            
+            $Compras->url_comprobante = url('public/soportes/pagos/'.$Compras->comprobante);
+            $envio =  UsuarioDireccion::where('id', $Compras->direccion_id)->first();
+            
+            $Compras->persona_contacto  = $envio->persona_contacto;
+            $Compras->telefono_contacto = $envio->telefono;
+            $Compras->estado            = $envio->estado;
+            $Compras->ciudad            = $envio->ciudad;
+            $Compras->direccion_envio   = $envio->direccion;
+            $Compras->punto_referencia  = $envio->punto_referencia;
 
         if ($Compras) {
             return array_merge($Compras->toArray(), [
                 's' => 's',
-                'msj' => trans('controller.buscar')
+                'msj' => trans('controller.buscar'),
+                
             ]);
         }
 
@@ -188,7 +202,8 @@ class ComprasController extends Controller
             'banco_usuario', 
             'monto', 
             'deleted_at'
-        ]);
+        ])
+        ->where('estatus', 1);
 
         if ($request->verSoloEliminados == 'true') {
             $sql->onlyTrashed();
@@ -202,5 +217,9 @@ class ComprasController extends Controller
                 return is_null($registro->deleted_at) ? '' : 'bg-red-thunderbird bg-font-red-thunderbird';
             })
             ->make(true);
+    }
+
+    public function metodoEnvio(){
+        return MetodoEnvio::pluck('nombre', 'id');
     }
 }

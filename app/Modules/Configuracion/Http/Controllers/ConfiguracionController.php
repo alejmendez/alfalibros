@@ -177,4 +177,8 @@ class ConfiguracionController extends Controller {
 			->make(true);
 	}
 
+	public function warehouse(){
+		return DB::connection('phppos')->table('phppos_locations')->pluck('name', 'location_id');
+	}
+
 }

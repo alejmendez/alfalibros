@@ -13,7 +13,8 @@ class ConfiguracionRequest extends Request {
 		'login_logo'   => [ 'max:100' ],
 		'email'        => [ 'max:100' ],
 		'email_name'   => [ 'max:100' ],
-		'email_prueba' => [ 'max:100' ],
-		'fecha'        => [ 'max:100' ]
+		'email_prueba' => [ 'max: 100' ],
+		'fecha'        => [ 'max: 100' ],
+		'warehouse'	   => ['min : 1']
 	];
 }

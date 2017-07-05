@@ -77,6 +77,23 @@ Route::group(['middleware' => 'web', 'prefix' => Config::get('admin.prefix'), 'n
 
 		Route::get('datatable', 		'BancosController@datatable');
 	});
+	
+	Route::group(['prefix' => 'metodo_envio'], function() {
+		Route::get('/', 				'MetodoEnvioController@index');
+		Route::get('nuevo', 			'MetodoEnvioController@nuevo');
+		Route::get('cambiar/{id}', 		'MetodoEnvioController@cambiar');
+		
+		Route::get('buscar/{id}', 		'MetodoEnvioController@buscar');
+
+		Route::post('guardar',			'MetodoEnvioController@guardar');
+		Route::put('guardar/{id}', 		'MetodoEnvioController@guardar');
+
+		Route::delete('eliminar/{id}', 	'MetodoEnvioController@eliminar');
+		Route::post('restaurar/{id}', 	'MetodoEnvioController@restaurar');
+		Route::delete('destruir/{id}', 	'MetodoEnvioController@destruir');
+
+		Route::get('datatable', 		'MetodoEnvioController@datatable');
+	});
 
 	Route::group(['prefix' => 'compras'], function() {
 		Route::get('/', 				'ComprasController@index');

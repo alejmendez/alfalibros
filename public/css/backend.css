@@ -1,0 +1,64 @@
+.page-content {
+	min-height: 400px;
+}
+
+#botonera{
+	margin-bottom: 0;
+	padding-right: 20px;
+	text-align: right;
+}
+
+#botonera.affix {
+	z-index: 1000;
+	right: 20px;
+}
+
+.modal-busqueda{
+	padding-right: 0 !important;
+}
+.modal-busqueda .dataTable{
+	width: 100% !important;
+}
+
+.modal-busqueda .dataTable tbody td{
+	cursor: pointer;
+}
+
+.modal-busqueda .modal-dialog.container{
+	width: 100%;
+	padding: 0 2px;
+}
+
+.modal-busqueda .modal-dialog{
+	margin: 10px 0;
+}
+
+div.form-control{
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.ui-datepicker-month,
+.ui-datepicker-year{
+	color: black !important;
+}
+
+label .requerido{
+	color: #BB0000;
+	font-size: 0.5em;
+	float: right;
+	margin-left: 2px;
+}
+
+.form-control.has-warning {
+	background-image: linear-gradient(#ff5722,#ff5722),linear-gradient(#d2d2d2,#d2d2d2) !important;
+}
+
+.tooltip{
+	z-index: 50000 !important;
+}
+
+.campo_numeric{
+	padding: 0 0 0 5px;
+}

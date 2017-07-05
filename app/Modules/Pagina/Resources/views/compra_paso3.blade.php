@@ -14,6 +14,9 @@
 					{!! Form::hidden('codigo', $compras->codigo) !!}
 
 					<h4 class="col-sm-12">Datos Bancarios</h4>
+					<h5 class="col-sm-12">
+						 Despues de realizar la transferencia, rellene los siguientes campos para así poder verificarla en un lapso de 24 horas aproximadamente 
+					</h5>
 
 					{!! Form::bsText('banco_usuario', '', [
 						'label'       => 'Banco del cliente',
@@ -163,7 +166,7 @@
 			<div class="modal-body">
 				@if(is_null($compras->bancos_id))
 					<p>
-						Se cuenta con un limite de <b title="Hata el {{ $compras->created_at->addHour()->format('d/m/Y h:i:s a') }}">{{ $compras->created_at->addHour()->diffInMinutes(\Carbon\Carbon::now()) }} minutos</b>, para realizar el pago, durante este tiempo sus artirulos estaran apartados, al finalizar el tiempo sin confirmar su pago los articulos volveran a estar a disposicion de cualquier otro usuario para su compra.
+						Cuenta con un limite de <b title="Hata el {{ $compras->created_at->addHour()->format('d/m/Y h:i:s a') }}">{{ $compras->created_at->addHour()->diffInMinutes(\Carbon\Carbon::now()) }} minutos</b> a partir de este momento para completar el pago, su(s) artículo(s) se encuentra(n) apartado(s), Si no completa el pago antes de finalizar el tiempo el (los) items volverán a estar disponibles al público.
 					</p>
 				@endif
 			
@@ -217,12 +220,21 @@
 		.mt-step-col a{
 			text-decoration: none;
 		}
+		.modal-dialog{
+			margin: 30px auto;
+			width: 600px;
+		}
 	</style>
 @endpush
 @push('js')
+	
 <script type="text/javascript">
-var $url_paso_4 = "{{ route('pag.compra.ver', [ 'codigo' => $codigo, 'paso' => 4 ]) }}";
-
+	
+	var $url_paso_4 = "{{ route('pag.compra.ver', [ 'codigo' => $codigo, 'paso' => 4 ]) }}";
+	if(parseInt(banco_id) != 0){
+		$('#conteo').remove();
+	}
+	
 	$("#datosBancosModal").modal();
 	
 	$('.confirma').click(function(){
@@ -230,13 +242,13 @@ var $url_paso_4 = "{{ route('pag.compra.ver', [ 'codigo' => $codigo, 'paso' => 4
 			location.href = $url_paso_4;
 		}, 3000);
 	});
-
+/*
 	$('#cotizacion').click(function(){
 		
 		url_cotiza = "{{ route('pag.compra.cotizacion', [ 'codigo' => $codigo ]) }}";
   		window.open(url_cotiza, '_blank');
 	
-	});
+	});*/
 
 	$('#form-confirmar').submit(function() { 
 		// submit the form 

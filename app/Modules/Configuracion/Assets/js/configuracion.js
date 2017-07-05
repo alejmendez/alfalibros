@@ -1,6 +1,7 @@
 var aplicacion;
 
 $(function() {
+
 	$('#formulario').submit(function() { 
         $(this).ajaxSubmit({ 
 			'url' : $url + 'guardar',
@@ -14,8 +15,11 @@ $(function() {
 		}); 
 		return false; 
 	});
-
 	
+	$('#guardar').on('click', function(){
+		console.log('sdkjvbsd');
+	});
+
 	$("#forma").datepicker({
 	    dateFormat: 'yy-mm-dd',	
 		defaultDate: "+1w",

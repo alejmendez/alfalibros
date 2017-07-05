@@ -50,11 +50,25 @@ $lista = [
         </div>
     </div>
 </div>
+    @if($paso != 4)
+        <div class="row">
+                <div class="col-xs-12 text-right" id="conteo">
+                    <span id="texto"></span>
+                    <span class="clock"></span>
+                </div>
+        </div>
+    @endif
 <div class="row">
     <div class="col-xs-12">
-        <button id="cotizacion" type="button" class="btn btn-primary btn-imprimir" style="float: right;">
-            <i class="fa fa-print" aria-hidden="true"></i> Ver Cotización
-        </button>
+        @if($paso != 4)
+            <button id="cotizacion" type="button" class="btn btn-primary btn-imprimir" style="float: right;">
+                <i class="fa fa-print" aria-hidden="true"></i> Imprimir Cotización
+            </button>
+        @else
+            <button id="cotizacion" type="button" class="btn btn-primary btn-imprimir" style="float: right;">
+                <i class="fa fa-print" aria-hidden="true"></i> Imprimir Factura
+            </button>
+        @endif
         @if($paso == 3)
             <button id="btn-datosBancosModal" type="button" class="btn btn-info" data-dismiss="modal" style="float: right; margin-right: 10px;" data-toggle="modal" data-target="#datosBancosModal">
                 <i class="fa fa-info" aria-hidden="true"></i>
@@ -64,14 +78,24 @@ $lista = [
     </div>
 </div>
 
-
 @push('js')
+
     <script type="text/javascript">
+        var tiempo_pago = '{{ $compras->created_at->addHour()->format("Y/m/d H:i:s") }}';
+        var banco_id ="{{ intval($compras->bancos_id) }}";
+       
+       if(banco_id == 0){
+        contador(tiempo_pago, '.clock', '#pago');
+       }
+
+        //$('#tiempo_restante').countdown({until: tiempo_pago});
         $('#cotizacion').click(function(){
         
             url_cotiza = "{{ route('pag.compra.cotizacion', [ 'codigo' => $codigo ]) }}";
             window.open(url_cotiza, '_blank');
         
         });
+
+        
     </script>
 @endpush

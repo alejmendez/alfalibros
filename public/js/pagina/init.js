@@ -57,8 +57,11 @@ $(function(){
 
 		var form = $(this);
 		$.post(form.attr('action'), form.serialize(), function(r){
-			$("#crear-usuarios-modal").modal('hide');
-			alert(r);
+			if (r.s == 's') {
+				location.href = $urlApp + 'usuarios/registrado';
+			}
+			//$("#crear-usuarios-modal").modal('hide');
+			//alert(r);
 		});
 	});
 
@@ -124,6 +127,40 @@ $(function(){
 		evt.preventDefault();
 		$('#login-modal').modal('show');
 	});
+	if($.fn.age){
+		$('.age').age({
+			interval: 1000,
+			suffixes: {
+				past: "",
+				future: "",
+			},
+			prefixes: {
+				past: "hace",
+				future: "",
+			},
+			formats: {
+				now: "ahora",
+				singular: {
+					seconds: "un segundo",
+					minutes: "un minuto",
+					hours  : "una hora",
+					days   : "un dia",
+					weeks  : "una semana",
+					months : "un mes",
+					years  : "un año",
+				},
+				plural: {
+					seconds: "{{amount}} segundos",
+					minutes: "{{amount}} minutos",
+					hours  : "{{amount}} horas",
+					days   : "{{amount}} dias",
+					weeks  : "{{amount}} semanas",
+					months : "{{amount}} meses",
+					years  : "{{amount}} años",
+				},
+			},
+		});
+	}
 });
 
 function _agregarCarrito($id, $cantidad) {
@@ -317,3 +354,29 @@ window.alert = function(msj) {
 		//callback: function(){ /* your callback code */ }
 	});
 };
+
+function contador(fecha, clock, boton){
+	if($(clock).length <= 0)
+			return;
+		
+    $(clock).countdown(fecha).on('update.countdown', function(event) {
+        var format = '%M:%S';
+        if(event.offset.totalDays > 0) {
+            format = '%-d Día%!d ' + format;
+        }
+
+        if(event.offset.weeks > 0) {
+            format = '%-w Semanas%!w ' + format;
+        }
+        
+        $('#texto').html('Debe de Pagar antes de');
+
+        $(this).html(event.strftime(format)+' minutos');
+    }).on('finish.countdown', function(event) {
+        //cuanto termina el contador
+        $('#texto').html('');
+        $(this).html('EL tiempo disponible para el pago de ha agotado');
+        alert('EL tiempo disponible para el pago de ha agotado');
+        $(boton).addClass('disabled').removeAttr("data-toggle");
+    });
+}

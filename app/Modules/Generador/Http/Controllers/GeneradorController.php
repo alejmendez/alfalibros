@@ -44,7 +44,7 @@ class GeneradorController extends Controller {
     public function index() {
         $this->modulo = 'Generador';
         
-        return $this->view('generador::Generador');
+        return $this->view('generador::generador');
     }
 
     public function guardar(GeneradorRequest $request) {

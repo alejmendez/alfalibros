@@ -102,6 +102,12 @@ class UsuariosController extends Controller
 		]);
 	}
 
+	public function registrado()
+	{
+		$this->setTitulo('graciasRegistro');
+		return $this->view('pagina::graciasRegistro');
+	}
+	
 	public function recuperar_usuario()
 	{
 		$this->setTitulo('Recuperar Login de Usuario');
@@ -198,7 +204,9 @@ class UsuariosController extends Controller
 		DB::commit();
 		DB::connection('phppos')->commit();
 
-		return 'Hemos enviado un mensaje para confirmar tu cuenta de Correo Electr&oacute;nico.';
+		return  $this->view('pagina::graciasRegistro');
+
+		//return 'Hemos enviado un mensaje para confirmar tu cuenta de Correo Electr&oacute;nico.';
 	}
 
 	public function confirmar($codigo)
@@ -238,7 +246,10 @@ class UsuariosController extends Controller
     	];
         if($ubicacion){
         	$salida = [
-        		's' => 's', 'msj' => 'Se registró correctamente la dirección'
+				'id'      => $ubicacion->id,
+				'nombre'  => $ubicacion->nombre_direccion,
+        		's' => 's', 
+				'msj'     => 'Se registró correctamente la dirección'
         	];
         }
 

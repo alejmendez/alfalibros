@@ -54,18 +54,25 @@
 											<td>
 												@if ($compra->created_at->addHour()->timestamp < \Carbon\Carbon::now()->timestamp)
 													
-												@elseif ($compra->aprobado == 0)
+												@elseif ($compra->aprobado == 0 && is_null($compra->bancos_id))
 													<div class="btn-group">
-														<a href="{{ route('pag.compra.ver', ['codigo' => $compra->codigo]) }}" title="ver Compra" data-toggle="tooltip" class="btn btn-info">
-															<i class="fa fa-eye" aria-hidden="true"></i>
-														</a>
-														<a href="{{ route('pag.compra.confirmar', ['codigo' => $compra->codigo]) }}" title="Confirmar Compra" data-toggle="tooltip" class="btn btn-success">
+														<a href="{{ route('pag.compra.ver', ['codigo' => $compra->codigo]) }}" title="Pagar ahora" data-toggle="tooltip" class="btn btn-info">
 															<i class="fa fa-check" aria-hidden="true"></i>
 														</a>
 														<a href="{{ route('pag.compra.cancelar', ['codigo' => $compra->codigo]) }}" title="Cancelar Compra" data-toggle="tooltip" class="btn btn-danger">
 															<i class="fa fa-remove" aria-hidden="true"></i>
 														</a>
 													</div>
+												@elseif ($compra->aprobado > 0 && $compra->bancos_id > 0)
+													<div class="btn-group">
+														<a href="{{ route('pag.compra.cotizacion', ['codigo' => $compra->codigo]) }}" title="ver compra" data-toggle="tooltip" class="btn btn-info">
+															<i class="fa fa-eye" aria-hidden="true"></i>
+														</a>
+														<a href="{{ route('pag.compra.cancelar', ['codigo' => $compra->codigo]) }}" title="Cancelar Compra" data-toggle="tooltip" class="btn btn-danger">
+															<i class="fa fa-remove" aria-hidden="true"></i>
+														</a>
+													</div>
+
 												@endif
 											</td>
 										</tr>
@@ -118,12 +125,20 @@
 											<td>
 												@if ($compra->created_at->addHour()->timestamp < \Carbon\Carbon::now()->timestamp)
 													
-												@elseif ($compra->aprobado == 0)
+												@elseif ($compra->aprobado == 0 && is_null($compra->bancos_id))
 													<div class="btn-group">
-														<a href="{{ route('pag.compra.ver', ['codigo' => $compra->codigo]) }}" title="ver Compra" data-toggle="tooltip" class="btn btn-info">
+														<a href="{{ route('pag.compra.ver', ['codigo' => $compra->codigo]) }}" title="Pagar ahora" data-toggle="tooltip" class="btn btn-info">
+															<i class="fa fa-check" aria-hidden="true"></i>
+														</a>
+														<a href="{{ route('pag.compra.cancelar', ['codigo' => $compra->codigo]) }}" title="Cancelar Compra" data-toggle="tooltip" class="btn btn-danger">
+															<i class="fa fa-remove" aria-hidden="true"></i>
+														</a>
+													</div>
+												@elseif ($compra->aprobado > 0 && $compra->bancos_id > 0)
+													<div class="btn-group">
+														<a href="{{ route('pag.compra.cotizacion', ['codigo' => $compra->codigo]) }}" title="ver compra" data-toggle="tooltip" class="btn btn-info">
 															<i class="fa fa-eye" aria-hidden="true"></i>
 														</a>
-														
 														<a href="{{ route('pag.compra.cancelar', ['codigo' => $compra->codigo]) }}" title="Cancelar Compra" data-toggle="tooltip" class="btn btn-danger">
 															<i class="fa fa-remove" aria-hidden="true"></i>
 														</a>

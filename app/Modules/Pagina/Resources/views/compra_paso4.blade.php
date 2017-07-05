@@ -6,13 +6,7 @@
 	<div class="col-md-9 col-sm-12 div-round div-card div-white">
 		@if ($autenticado)
 			@include('pagina::partials.pasos-compra')
-			<div class="row">
-				<div class="col-xs-12">
-					<button id="imprimir" type="button" class="btn btn-primary btn-imprimir" style="float: right;" data-toggle="modal" data-target="#cotizacionModal">
-						<i class="fa fa-print" aria-hidden="true"></i> Imprimir Factura
-					</button>
-				</div>
-			</div>
+			
 			
 			<div class="row">
 				<div class="col-xs-12 text-center confirmado">
@@ -56,8 +50,8 @@
 <script type="text/javascript">
 var $url_paso_4 = "{{ route('pag.compra.ver', [ 'codigo' => $codigo, 'paso' => 4 ]) }}";
 	$("#datosBancosModal").modal();
+	//$('#cotizacion').text('<i class="fa fa-print" aria-hidden="true"></i> Imprimir Cotización')
 	
-	$('#cotizacion').remove();
 
 	$('#form-confirmar').submit(function() { 
 		// submit the form 

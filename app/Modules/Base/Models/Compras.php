@@ -31,6 +31,7 @@ class Compras extends Modelo
         "banco_usuario",
         "comprobante",
         "monto",
+        "ultimo_paso",
         "estatus",
         "aprobado"
     ];
@@ -43,7 +44,8 @@ class Compras extends Modelo
         'sale_id' => [
             'type'        => 'number',
             'label'       => 'Codigo de Venta (PHPPOS)',
-            'placeholder' => 'Codigo de Venta (PHPPOS)'
+            'placeholder' => 'Codigo de Venta (PHPPOS)',
+            'disabled'    => 'disabled',
         ],
         'codigo' => [
             'type'        => 'text',
@@ -187,6 +189,16 @@ class Compras extends Modelo
 		return $this->belongsTo('alfalibros\Modules\Base\Models\Bancos');
 	}
 
+    public function direccion_envio()
+	{
+		return $this->hasOne('alfalibros\Modules\Base\Models\UsuarioDireccion', 'id', 'direccion_id');
+	}
+
+    public function metodo_envio()
+	{
+		return $this->belongsTo('alfalibros\Modules\Base\Models\MetodoEnvio');
+	}
+
     public function venta()
     {
         return $this->hasOne('alfalibros\Modules\Pagina\Models\Venta', 'sale_id', 'sale_id');
@@ -196,5 +208,4 @@ class Compras extends Modelo
     {
         return $this->hasOne('alfalibros\Modules\Pagina\Models\Venta', 'sale_id', 'sale_id');
     }
-
 }

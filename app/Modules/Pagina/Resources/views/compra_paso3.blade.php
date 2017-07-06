@@ -261,7 +261,7 @@
 				
 				setTimeout(function(){
 					location.href = $url_paso_4;
-				}, 3000);
+				}, 10000);
 			}
 		}); 
 		// return false to prevent normal browser submit and page navigation 

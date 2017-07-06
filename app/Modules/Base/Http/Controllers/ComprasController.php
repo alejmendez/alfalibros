@@ -101,10 +101,11 @@ class ComprasController extends Controller
             $Compras = $id == 0 ? new Compras() : Compras::find($id);
 
             $data = $request->all();
-            $Compras->fill($data);
+            //$Compras->fill($data);
+            $Compras->aprobado = $request->aprobado;
             $Compras->save();
 
-            if ($data['aprobado'] == 1) {
+            if ($request->aprobado == 1) {
                 // hay q descontar de inventario
                 $venta = Venta::find($Compras->sale_id)->update([
                     'suspended'               => 0
@@ -203,6 +204,7 @@ class ComprasController extends Controller
             'monto', 
             'deleted_at'
         ])
+        ->whereNotNull('bancos_id')
         ->where('estatus', 1);
 
         if ($request->verSoloEliminados == 'true') {

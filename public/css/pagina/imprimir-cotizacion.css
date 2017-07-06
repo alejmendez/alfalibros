@@ -7,10 +7,14 @@
         margin: 1.6cm;
     }
     nav,
+    .btn,
     .side-left,
     .btn-pagar,
     .btn-imprimir,
+    .p_estatus,
     hr,
+    .clock,
+    #texto,
     footer {
         display: none;
     }

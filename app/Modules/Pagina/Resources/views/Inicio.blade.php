@@ -4,7 +4,6 @@
 <div class="row">
 	@include('pagina::partials.side-menu-left')
 	<div class="col-md-7 col-sm-12 contenido">
-		<h3>Ultimos Libros</h3>
 		@foreach ($productos->chunk(4) as $_productos)
 			<div class="row">
 				@foreach ($_productos as $producto)

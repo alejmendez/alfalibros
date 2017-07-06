@@ -32,6 +32,7 @@ class CompraController extends Controller
 	public function ver(Request $request, $codigo = 0, $paso = 1)
 	{
 		//$productos = $this->productoVendidoQB();
+		$this->js[] = 'jquery.age.js';
 		$usuario = auth()->user();
 
 		$productos          = [];
@@ -52,6 +53,7 @@ class CompraController extends Controller
 		foreach ($eliminar as $elimina) {
 			$elimina->delete();
 		}
+		
 
 		if (preg_match('/[a-z0-9]{80}/i', $codigo)) {
 			$compras    = Compras::where('codigo', $codigo)->first();
@@ -61,6 +63,17 @@ class CompraController extends Controller
 					'compra' => $compras,
 				]);
 			}
+
+			if ($paso == 3 && $compras->ultimo_paso == 2) {
+				//$this->enviar_correo_pago($codigo);
+				$compras->ultimo_paso = 3;
+				$compras->save();
+			}
+
+			if ($paso > $compras->ultimo_paso) {
+				return abort(404);
+			}
+
 			if ($compras->estatus == 0) {
 				$venta = Venta::on($dbDefault)->find($compras->sale_id);
 				$productos = VentaDetalle::on($dbDefault)->where('sale_id', $compras->sale_id)->get();
@@ -88,6 +101,8 @@ class CompraController extends Controller
 				$this->css[] = 'pagina/imprimir-cotizacion.css';
 			}elseif ($paso == 3) {
 				$apartado = $this->apartarArticulo($codigo);
+				$compras  = Compras::where('codigo', $codigo)->first();
+
 				if ($apartado !== true) {
 					return $apartado;
 				}
@@ -126,7 +141,6 @@ class CompraController extends Controller
 		]);
 	}
 
-
 	public function comprar(Request $request)
 	{
 		$usuario = auth()->user();
@@ -141,9 +155,11 @@ class CompraController extends Controller
 		$carrito = Cart::content();
 
 		$total = 0;
+		$cantidad = 0;
 		$productos_ids = [];
 		foreach($carrito as $producto) {
 			$total += $producto->qty * $producto->price;
+			$cantidad += $producto->qty;
 			$productos_ids[] = $producto->id;
 		}
 
@@ -178,27 +194,32 @@ class CompraController extends Controller
 			$dbDefault = \Config::get('database.default');
 
 			$venta = Venta::on($dbDefault)->create([
-				'sale_time'               => Carbon::now(),
-				'customer_id'             => $usuario->persona_id,
-				'web'                     => 1,
-				'employee_id'             => 247, // cambiar por el usuario de venta
-				'sold_by_employee_id'     => 247, // cambiar por el usuario de venta
-				'comment'                 => '',
-				'show_comment_on_receipt' => 1,
-				'payment_type'            => 'Transferencia: BsF' . number_format($total, 0, '', '.') . '<br />',
-				'cc_ref_no'               => '',
-				'auth_code'               => '',
-				'deleted'                 => 0,
-				'suspended'               => 1,
-				'store_account_payment'   => 0,
-				'was_layaway'             => 0,
-				'was_estimate'            => 0,
-				'location_id'             => $this->location_id(),
-				'register_id'             => 3, // cambiar por el usuario de venta
-				'points_used'             => 0,
-				'points_gained'           => 0,
-				'did_redeem_discount'     => 0,
-				'discount_reason'         => '',
+				'sale_time'                => Carbon::now(),
+				'customer_id'              => $usuario->persona_id,
+				'web'                      => 1,
+				'employee_id'              => 247, // cambiar por el usuario de venta
+				'sold_by_employee_id'      => 247, // cambiar por el usuario de venta
+				'comment'                  => '',
+				'show_comment_on_receipt'  => 1,
+				'payment_type'             => 'Transferencia: BsF' . number_format($total, 0, '', '.') . '<br />',
+				'cc_ref_no'                => '',
+				'auth_code'                => '',
+				'deleted'                  => 0,
+				'suspended'                => 1,
+				'store_account_payment'    => 0,
+				'was_layaway'              => 0,
+				'was_estimate'             => 0,
+				'location_id'              => $this->location_id(),
+				'register_id'              => 3, // cambiar por el usuario de venta
+				'points_used'              => 0,
+				'points_gained'            => 0,
+				'did_redeem_discount'      => 0,
+				'discount_reason'          => '',
+				'total_quantity_purchased' => $cantidad,
+				'subtotal'                 => $total,
+				'tax'                      => 0,
+				'total'                    => $total,
+				'profit'                   => 0,
 			]);
 
 			$i = 1;
@@ -244,46 +265,6 @@ class CompraController extends Controller
 				"monto"                => $total
 			]); 
 
-			$msj = 'Se cuenta con un limite de <b>60 minutos</b> para realizar la compra (
-				Hasta el <b>' . Carbon::now()->addHour()->format('d/m/Y H:i:s') . '</b>), 
-				durante este tiempo sus artirulos estaran en una venta suspendida, 
-				al finalizar el tiempo sin confirmar su compra los articulos volveran 
-				a estar a disposicion de cualquier otro usuario para su compra.<br><br>';
-
-			foreach (Bancos::all() as $banco) {
-				/*$msj .= 
-					'<b>Banco:</b> '          . $banco->banco . '<br>' .
-					'<b>Tipo de cuenta:</b> ' . $banco->tipo_cuenta . '<br>' .
-					'<b>Cuenta:</b> '         . $banco->cuenta . '<br>' .
-					'<b>Nombre:</b> '         . $banco->nombre . '<br>' .
-					'<b>Rif:</b> '            . $banco->cedula . '<br>' .
-					'<b>Correo:</b> '         . $banco->correo . '<br><br>';
-					*/
-			}
-
-			$msj .= 'Al tener el codigo de la transferencia puede hacer el acuse del pago 
-			<a href="' . url('compra/confirmar/' . $compra->codigo) . '">aqu&iacute;</a>.';
-
-			$datosCorreo = [
-				'usuario' => $usuario,
-				'titulos' => [
-					'Compra en',
-					'AlfaLibros',
-					'Falta realizar el pago por la la compra de los articulos.',
-				],
-				'tituloCuerpo' => 'Datos para realizar la transferencia.',
-				'cuerpo' => $msj,
-			];
-
-			if ($request->ip() != "::1") {
-				
-				\Mail::send("pagina::emails.mensaje", $datosCorreo, function($message) use($usuario) {
-					$message->from('no_responder@alfalibros.com', 'Alfalibros.com');
-					$message->to($usuario->persona->email, $usuario->persona->full_name)
-						->subject("Compra en Alfalibros.com");
-				});
-			}
-
 			Cart::destroy();
 		} catch (Exception $e) {
 			DB::rollback();
@@ -321,7 +302,9 @@ class CompraController extends Controller
 			
 			$compra = Compras::where('codigo', $codigo)->firstOrFail();
 
-			$compra->fill($data)->save();
+			$compra->fill($data);
+			$compra->ultimo_paso = 4;
+			$compra->save();
 
 			$venta = Venta::find($compra->sale_id);
 		} catch (Exception $e) {
@@ -368,19 +351,19 @@ class CompraController extends Controller
 	{
 		//$data    =  $request;
 		$compras = Compras::where('codigo', $request->codigo)->first();
+
 		$compras->direccion_id    = $request->direccion_id;
 		$compras->metodo_envio_id = $request->metodo_envio_id;
 		$compras->nombre          = $request->nombre;
 		$compras->direccion       = $request->direccion;
+		$compras->ultimo_paso     = 2;
 		$compras->save();
 		
-
-		$salida = [ 's'=> 'n', 'msj' => 'No se pudo realizar la Facturación'];
-
 		if($compras){
-			$salida = [ 's'=> 's', 'msj' => 'Facturación guardada'];
+			return [ 's'=> 's', 'msj' => 'Facturación guardada'];
 		}
-		return $salida;
+
+		return [ 's'=> 'n', 'msj' => 'No se pudo realizar la Facturación'];
 	}
 
 	protected function compras_suspendidas($codigo)
@@ -443,8 +426,8 @@ class CompraController extends Controller
 						->table('phppos_sales_items_taxes')
 						->insert([
 							'sale_id'    => $venta->sale_id,
-							'item_id'    => $producto['item_id'],
-							'line'       => $producto['line'],
+							'item_id'    => $producto->item_id,
+							'line'       => $producto->line,
 							'name'       => 'EXENTO',
 							'percent'    => 0,
 							'cumulative' => 0,
@@ -457,17 +440,17 @@ class CompraController extends Controller
 
 					$cantidad = DB::connection('phppos')
                         ->table('phppos_location_items')
-                        ->where('item_id', $producto['item_id'])
+                        ->where('item_id', $producto->item_id)
                         ->where('location_id', $this->location_id())
 						->first();
 
 
-					if ($cantidad->quantity >= $producto['quantity_purchased']) {
+					if ($cantidad->quantity >= $producto->quantity_purchased) {
                     	$cantidad = DB::connection('phppos')
 							->table('phppos_location_items')
-							->where('item_id', $producto['item_id'])
+							->where('item_id', $producto->item_id)
 							->where('location_id', $this->location_id())
-							->decrement('quantity', $producto['quantity_purchased']);
+							->decrement('quantity', $producto->quantity_purchased);
 					} else {
 						$errores[] = 'La cantidad de "' .
 							$_producto->name . 
@@ -485,6 +468,7 @@ class CompraController extends Controller
 			} catch (Exception $e) {
 				DB::rollback();
 				DB::connection('phppos')->rollback();
+				dd($e->getMessage());
 				return $e->getMessage();
 			}
 
@@ -495,7 +479,8 @@ class CompraController extends Controller
 		return true;
 	}
 
-	public function cotizacion(Request $request, $codigo = 0){
+	public function cotizacion(Request $request, $codigo = 0)
+	{
 		$usuario = auth()->user();
 		
 		$productos          = [];
@@ -561,28 +546,72 @@ class CompraController extends Controller
 		]);
 	}
 
-	public function metodoEnvio(){
+	public function metodoEnvio()
+	{
 		return MetodoEnvio::pluck('nombre', 'id');
 	}
 
-	public function resetearTiempo($codigo){
+	public function resetearTiempo($codigo)
+	{
 		$compras = Compras::where('codigo', $codigo)->where('estatus', 0)->first();
 		$dbDefault = \Config::get('database.default');
 		
-		if($compras){
+		if ($compras) {
 			$venta = Venta::on($dbDefault)->find($compras->sale_id);
 			
-			$compras->created_at =  Carbon::now()->addSecounds(10)->format('Y-m-d H:i:s');
-			$compras->estatus = 1;
+			$compras->created_at = Carbon::now()->addSeconds(10)->format('Y-m-d H:i:s');
+			//$compras->estatus = 1;
 			$compras->save();
 
 			$venta->update([
-				'sale_time' => Carbon::now()->addSecounds(10)->format('Y-m-d H:i:s')
+				'sale_time' => Carbon::now()->addSeconds(10)->format('Y-m-d H:i:s')
 			]);
 			
 			return true;
 		}
 
 		return false;
+	}
+
+	public function enviar_correo_pago() 
+	{
+		$msj = 'Se cuenta con un limite de <b>60 minutos</b> para realizar la compra (
+			Hasta el <b>' . Carbon::now()->addHour()->format('d/m/Y H:i:s') . '</b>), 
+			durante este tiempo sus artirulos estaran en una venta suspendida, 
+			al finalizar el tiempo sin confirmar su compra los articulos volveran 
+			a estar a disposicion de cualquier otro usuario para su compra.<br><br>';
+
+		foreach (Bancos::all() as $banco) {
+			/*$msj .= 
+				'<b>Banco:</b> '          . $banco->banco . '<br>' .
+				'<b>Tipo de cuenta:</b> ' . $banco->tipo_cuenta . '<br>' .
+				'<b>Cuenta:</b> '         . $banco->cuenta . '<br>' .
+				'<b>Nombre:</b> '         . $banco->nombre . '<br>' .
+				'<b>Rif:</b> '            . $banco->cedula . '<br>' .
+				'<b>Correo:</b> '         . $banco->correo . '<br><br>';
+				*/
+		}
+
+		$msj .= 'Al tener el codigo de la transferencia puede hacer el acuse del pago 
+		<a href="' . url('compra/confirmar/' . $compra->codigo) . '">aqu&iacute;</a>.';
+
+		$datosCorreo = [
+			'usuario' => $usuario,
+			'titulos' => [
+				'Compra en',
+				'AlfaLibros',
+				'Falta realizar el pago por la la compra de los articulos.',
+			],
+			'tituloCuerpo' => 'Datos para realizar la transferencia.',
+			'cuerpo' => $msj,
+		];
+
+		if ($request->ip() != "::1") {			
+			\Mail::send("pagina::emails.mensaje", $datosCorreo, function($message) use($usuario) {
+				$message->from('no_responder@alfalibros.com', 'Alfalibros.com');
+				$message->to($usuario->persona->email, $usuario->persona->full_name)
+					->subject("Compra en Alfalibros.com");
+			});
+		}
 	}
 }

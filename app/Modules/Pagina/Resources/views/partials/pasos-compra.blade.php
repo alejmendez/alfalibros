@@ -50,26 +50,20 @@ $lista = [
         </div>
     </div>
 </div>
-    @if($paso != 4)
+    @if($paso != 4 and $paso != 2)
         <div class="row">
-                <div class="col-xs-12 text-right" id="conteo">
-                    <span id="texto"></span>
-                    <span class="clock"></span>
-                </div>
+            <div class="col-xs-12 text-right" id="conteo">
+                <span id="texto"></span>
+                <span class="clock"></span>
+            </div>
         </div>
     @endif
 <div class="row">
     <div class="col-xs-12">
-        @if($paso != 2)
-            @if($paso != 4)
-                <button id="cotizacion" type="button" class="btn btn-primary btn-imprimir" style="float: right;">
-                    <i class="fa fa-print" aria-hidden="true"></i> Imprimir Cotización
-                </button>
-            @else
-                <button id="cotizacion" type="button" class="btn btn-primary btn-imprimir" style="float: right;">
-                    <i class="fa fa-print" aria-hidden="true"></i> Imprimir Factura
-                </button>
-            @endif
+        @if($paso == 4)
+            <button id="cotizacion" type="button" class="btn btn-primary btn-imprimir" style="float: right;">
+                <i class="fa fa-print" aria-hidden="true"></i> Imprimir Recibo
+            </button>
         @endif
         
         @if($paso == 3)

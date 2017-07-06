@@ -7,29 +7,21 @@
 		@if ($autenticado)
 			@include('pagina::partials.pasos-compra')
 			<div class="row">
-					<div style="position: relative;">
-						<a href="#" class="btn btn-info btn-imprimir" style="position: absolute; right: 20px; z-index: 10;">
-							<i class="fa fa-print" aria-hidden="true"></i> Imprimir
-						</a>
-					</div>
-
 					<div class="col-xs-12 text-center">
 						<h3 style="font-weight:bold;"> 
-							<i>
 							@if ($compras->created_at->addHour()->timestamp < \Carbon\Carbon::now()->timestamp)
 								
 							@elseif ($compras->estatus == 0 && $compras->aprobado == 0)
-								COTIZACIÓN
+								Cotización
 							@elseif (is_null($compras->bancos_id) && $compras->estatus == 1 && $compras->aprobado == 0)
-								COTIZACIÓN
+								Cotización
 							@elseif (!is_null($compras->bancos_id) && $compras->estatus == 1 && $compras->aprobado == 0)
 								<span class="label label-primary">En Espera de confirmación</span>
 							@elseif ($compras->estatus == 1 && $compras->aprobado == 1)
-								FACTURA
+								Factura
 							@else
 								
 							@endif
-							</i>
 						</h3>
 						<hr/>
 					</div>
@@ -39,7 +31,7 @@
 
 					<div class="col-md-5" style="padding-top: 25px;">
 						Fecha: {{ \Carbon\Carbon::now()->format('d/m/Y') }}<br /><br />
-						<p> 
+						<p class="p_estatus"> 
 							<b>Estatus:</b>
 							@if ($compras->created_at->addHour()->timestamp < \Carbon\Carbon::now()->timestamp)
 								<span class="label label-danger">Tiempo Agotado</span>
@@ -75,8 +67,15 @@
 							<b>Cliente: </b>{{ $compras->nombre }}<br />
 							<b>C&eacute;dula: </b>{{ $compras->cedula }}<br />
 							<b>E-mail: </b>{{ $compras->correo }}<br />
-							<b>Direcci&oacute;n de envío: </b>{{ $compras->direccion_envio }}<br />
-							<b>Método de envío: </b>{{ $compras->metodo_envio }}<br />
+							<b>Direcci&oacute;n de envío: </b>
+								{{ $compras->direccion_envio->estado }} /
+								{{ $compras->direccion_envio->ciudad }} /
+								{{ $compras->direccion_envio->direccion }}
+								<br />
+							<b>Telefono: </b>{{ $compras->direccion_envio->telefono }}<br />
+							<b>Punto de Referencia: </b>{{ $compras->direccion_envio->punto_referencia }}<br />
+							<b>Codigo Postal: </b>{{ $compras->direccion_envio->codigo_postal }}<br />
+							<b>Método de envío: </b>{{ $compras->metodo_envio->nombre }}<br />
 							@if (trim($compras->nota) != '')
 							<b>Nota: </b>{{ $compras->nota }}<br />
 							@endif
@@ -134,19 +133,29 @@
 					</a>
 				</div>
 			@else
-				@if (is_null($compras->bancos_id) && $compras_suspendida == 0)
-					<div class="text-right">
-						<a href="{{ route('pag.compra.ver', [ 'codigo' => $codigo, 'paso' => 3 ]) }}" class="btn btn-info btn-pagar">
+				<div class="text-right">
+					<a href="{{ route('pag.compra.ver', [ 'codigo' => $codigo, 'paso' => 1 ]) }}" class="btn btn-info" style="float: left;">
+						<i class="fa fa-pencil" aria-hidden="true"></i> Editar
+					</a>
+
+					<span id="texto" style="float: left; margin-left: 10px;"></span>
+                	<span class="clock" style="float: left; margin-left: 4px;"></span>
+
+                	<span class="visible-print-block" style="float: left; margin-left: 10px;">Estos precios están sujetos a cambios sin previo aviso</span>
+
+					<a href="#" class="btn btn-info btn-imprimir">
+						<i class="fa fa-print" aria-hidden="true"></i> Imprimir
+					</a>
+					@if (is_null($compras->bancos_id) && $compras_suspendida == 0)
+						<a href="{{ route('pag.compra.ver', [ 'codigo' => $codigo, 'paso' => 3 ]) }}" class="btn btn-success btn-pagar">
 							<i class="fa fa-check" aria-hidden="true"></i> Pagar Ahora 
 						</a>
-					</div>
-				@else
-					<div class="text-right">
-						<a href="{{ route('pag.compra.ver', [ 'codigo' => $codigo, 'paso' => 3 ]) }}" class="btn btn-info">
+					@else
+						<a href="{{ route('pag.compra.ver', [ 'codigo' => $codigo, 'paso' => 3 ]) }}" class="btn btn-success">
 							<i class="fa fa-chevron-right" aria-hidden="true"></i> Siguiente 
 						</a>
-					</div>
-				@endif
+					@endif
+				</div>
 			@endif
 		@else
 			@include('pagina::partials.no-login')
@@ -178,7 +187,7 @@
 							<p class="text-center" style="text-align: center;">
 								<h3>Información</h3>
 								<br>
-								Verifique todos los productos en antes de realizar su compra y proceda a realizar el pago de la misma.
+								Verifique todos los productos antes de realizar su compra y proceda a realizar el pago de la misma.
 							</p>
 						</div>
 					@endif

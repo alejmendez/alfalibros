@@ -33,17 +33,17 @@
             <div class="col-xs-12 subtitulo">
                 <h4>Datos del cliente</h4>
             </div>
-                {!! $Compras->generate(['nombre','cedula','telefono','correo','direccion','nota']) !!}
+            {!! $Compras->generate(['nombre','cedula','telefono','correo','direccion','nota']) !!}
 
             <div class="col-xs-12 subtitulo">
                 <h4>Datos del pago</h4>
             </div>
-                {!! $Compras->generate(['codigo_transferencia','banco_usuario','monto']) !!}
+            {!! $Compras->generate(['codigo_transferencia','banco_usuario','monto']) !!}
 
             <div class="form-group col-xs-12" id="soporte">
                 <label for="comprobante">Comprobante:</label>
                 <br/>
-               <a href="#" style="text-decoration: none" id="img-comprobante" target="_blank">
+                <a href="#" style="text-decoration: none" id="img-comprobante" target="_blank">
                     <i class="fa fa-file-image-o fa-5x" style="padding:30px;"></i> Comprobante adjunto
                 </a>
                
@@ -53,9 +53,9 @@
             <div class="col-xs-12 subtitulo">
                 <h4>Datos de envío</h4>
             </div>
-                {!! $Compras->generate(['metodo_envio_id']) !!}
-            
-                {!! $Envio->generate(['persona_contacto','telefono','estado','ciudad', 'direccion','punto_referencia']) !!}
+            {!! $Compras->generate(['metodo_envio_id']) !!}
+        
+            {!! $Envio->generate(['persona_contacto','telefono','estado','ciudad', 'direccion','punto_referencia']) !!}
             
         {!! Form::close() !!}
     </div>

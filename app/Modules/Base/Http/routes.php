@@ -8,7 +8,7 @@ Route::group(['middleware' => 'web', 'prefix' => Config::get('admin.prefix'), 'n
 	 */
 	
 	Route::group(['prefix' => 'login'], function() {
-		Route::get('/', 				'LoginController@index');
+		Route::get('/', 				'LoginController@index')->name('login');
 		Route::get('salir', 			'LoginController@salir');
 		Route::post('validar', 			'LoginController@validar');
 		Route::get('bloquear', 			'LoginController@bloquear');

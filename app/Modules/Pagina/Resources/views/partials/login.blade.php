@@ -1,5 +1,5 @@
 	<div id="login-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
-		<div class="modal-dialog">
+		<div class="modal-dialog" style="width: 350px;">
 			<div class="loginmodal-container">
 								
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">

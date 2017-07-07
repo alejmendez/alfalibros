@@ -96,7 +96,9 @@ class CompraController extends Controller
 			if ($paso == 1){
 				$compras->cedula = $compras->cedula != '' ?
 					$compras->cedula : 
-					$usuario->persona->cliente->account_number;
+					(is_null($usuario->persona->cliente) ? 
+						'' : 
+						$usuario->persona->cliente->account_number);
 			}elseif ($paso == 2) {
 				$this->css[] = 'pagina/imprimir-cotizacion.css';
 			}elseif ($paso == 3) {
@@ -248,12 +250,18 @@ class CompraController extends Controller
 				]);
 			}
 
+			if (is_null($usuario->persona->cliente)) {
+				$cedula = '';
+			} else {
+				$cedula = $usuario->persona->cliente->account_number;
+			}
+
 			$compra = Compras::create([
 				"sale_id"              => $venta->sale_id,
 				"usuario_id"           => $usuario->id,
 				'codigo'               => str_random(80),
 				"nombre"               => $usuario->persona->full_name,
-				"cedula"               => $usuario->persona->cliente->account_number,
+				"cedula"               => $cedula,
 				"telefono"             => $usuario->persona->phone_number,
 				"correo"               => $usuario->persona->email,
 				"direccion"            => $usuario->persona->address_1,

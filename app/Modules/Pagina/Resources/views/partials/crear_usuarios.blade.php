@@ -1,6 +1,10 @@
 	<div id="crear-usuarios-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
 		<div class="modal-dialog">
-			<div class="loginmodal-container" style="max-width: 650px;">
+			<div class="loginmodal-container">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span >&times;</span>
+				</button>
+				
 				<h2 class="col-sm-12">Formulario de Registro de Nuevos Usuarios</h2>
 				{!! Form::open([
 					'url'            => 'usuarios/registrar', 

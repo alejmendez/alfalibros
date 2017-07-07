@@ -25,7 +25,7 @@
 						'class_cont'  => 'col-sm-12'
 					]) !!}
 
-					{!! Form::bsText('cedula', $usuario->persona->cliente->account_number, [
+					{!! Form::bsText('cedula', $usuario->persona->cliente->company_name, [
 						'label'       => 'Cédula',
 						'placeholder' => 'RIF/C.I',
 						'help'        => 'RIF/C.I del Cliente',

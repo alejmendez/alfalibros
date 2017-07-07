@@ -119,14 +119,23 @@ class UsuariosController extends Controller
 		$request->email = strtolower($request->email);
 		$request->account_number = strtoupper($request->account_number);
 		if ($request->aceptar != 1) {
-			return 'Para reg&iacute;strate debes Aceptar las condiciones y uso de Alfalibros.com';
+			return response()->json([
+				'error' => 1,
+				'msj' => 'Para reg&iacute;strate debes Aceptar las condiciones y uso de Alfalibros.com'
+			], 400);
 		}
 		
 		$usuario = Usuario::where('usuario', $request->email)->first();
 		$persona = Personas::where('email', $request->email)->first();
 
 		if ($persona || $usuario) {
-			return 'Ya el correo ' . $request->email . ' se encuentra registrado';
+			return response()->json([
+				'error' => 2,
+				'url' => route('pag.usuarios.recuperar.clave'),
+				'msj' => 'Su correo ya se encuentra registrado con nosotros, ' .
+							'es posible que haya comprado en alguna de nuestras ' .
+							'tiendas, para poder acceder debe recuperar la contraseña.'
+			], 400);
 		}
 		
 		$persona = new Personas();
@@ -161,10 +170,10 @@ class UsuariosController extends Controller
 			$persona->save();
 
 			$dataCliente = [
-				'account_number'             => $request->account_number,
+				//'account_number'             => $request->account_number,
 				'person_id'                  => $persona->person_id,
 				'override_default_tax'       => 0,
-				'company_name'               => '',
+				'company_name'               => $request->account_number,
 				'balance'                    => 0,
 				'points'                     => 0,
 				'current_spend_for_points'   => 0,
@@ -198,14 +207,23 @@ class UsuariosController extends Controller
 		} catch (Exception $e) {
 			DB::rollback();
 			DB::connection('phppos')->rollback();
-			return 'Se gener&oacute; un error al registrar al usuario, int&eacute;ntelo m&aacute;s tarde.';
+			return response()->json([
+				'error' => 3,
+				'msj' => 'Se gener&oacute; un error al registrar al usuario, int&eacute;ntelo m&aacute;s tarde.'
+			], 400);
 		}
 
 		DB::commit();
 		DB::connection('phppos')->commit();
 
-		return  $this->view('pagina::graciasRegistro');
-
+		if($request->ajax()){
+			return [
+				's' => 's',
+				'msj' => 'Usuario registrado satisfactorimente'
+			];
+		} else {
+			return $this->view('pagina::graciasRegistro');
+		}
 		//return 'Hemos enviado un mensaje para confirmar tu cuenta de Correo Electr&oacute;nico.';
 	}
 

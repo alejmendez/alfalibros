@@ -8,20 +8,26 @@
 			@include('pagina::partials.pasos-compra')
 			<div class="row">
 					<div class="col-xs-12 text-center">
-						<h3 style="font-weight:bold;"> 
-							@if ($compras->created_at->addHour()->timestamp < \Carbon\Carbon::now()->timestamp)
-								
-							@elseif ($compras->estatus == 0 && $compras->aprobado == 0)
-								Cotización
-							@elseif (is_null($compras->bancos_id) && $compras->estatus == 1 && $compras->aprobado == 0)
-								Cotización
-							@elseif (!is_null($compras->bancos_id) && $compras->estatus == 1 && $compras->aprobado == 0)
-								<span class="label label-primary">En Espera de confirmación</span>
-							@elseif ($compras->estatus == 1 && $compras->aprobado == 1)
-								Factura
-							@else
-								
-							@endif
+						<h3> 
+							<div class="hidden-print">
+								Revisar Compra
+							</div>
+
+							<div class="visible-print-inline">
+								@if ($compras->created_at->addHour()->timestamp < \Carbon\Carbon::now()->timestamp)
+									
+								@elseif ($compras->estatus == 0 && $compras->aprobado == 0)
+									Cotización
+								@elseif (is_null($compras->bancos_id) && $compras->estatus == 1 && $compras->aprobado == 0)
+									Cotización
+								@elseif (!is_null($compras->bancos_id) && $compras->estatus == 1 && $compras->aprobado == 0)
+									<span class="label label-primary">En Espera de confirmación</span>
+								@elseif ($compras->estatus == 1 && $compras->aprobado == 1)
+									Factura
+								@else
+									
+								@endif
+							</div>
 						</h3>
 						<hr/>
 					</div>
@@ -63,23 +69,28 @@
 
 				<div class="row">
 					<div class="col-md-6">
-						<p>
-							<b>Cliente: </b>{{ $compras->nombre }}<br />
-							<b>C&eacute;dula: </b>{{ $compras->cedula }}<br />
+						<b>Cliente: </b>{{ $compras->nombre }}<br />
+						<b>C&eacute;dula: </b>{{ $compras->cedula }}<br />
+						
+						<div class="hidden-print" style="margin:0;">
 							<b>E-mail: </b>{{ $compras->correo }}<br />
-							<b>Direcci&oacute;n de envío: </b>
-								{{ $compras->direccion_envio->estado }} /
-								{{ $compras->direccion_envio->ciudad }} /
-								{{ $compras->direccion_envio->direccion }}
-								<br />
-							<b>Telefono: </b>{{ $compras->direccion_envio->telefono }}<br />
-							<b>Punto de Referencia: </b>{{ $compras->direccion_envio->punto_referencia }}<br />
+						</div>
+						<b>Telefono: </b>{{ $compras->direccion_envio->telefono }}<br />
+
+						<div class="visible-print-inline" style="margin:0;">
+							<b>Direcci&oacute;n Fiscal: </b>{{ $compras->direccion }}<br />
+						</div>
+
+						<div class="hidden-print" style="margin:0;">
 							<b>Codigo Postal: </b>{{ $compras->direccion_envio->codigo_postal }}<br />
 							<b>Método de envío: </b>{{ $compras->metodo_envio->nombre }}<br />
+							<b>Direcci&oacute;n de envío: </b>{{ $compras->direccion_envio->direccion }}<br />
+							<b>Punto de Referencia: </b>{{ $compras->direccion_envio->punto_referencia }}<br />
+
 							@if (trim($compras->nota) != '')
 							<b>Nota: </b>{{ $compras->nota }}<br />
 							@endif
-						</p>
+						</div>
 					</div>
 				</div>
 

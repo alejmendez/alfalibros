@@ -284,21 +284,43 @@
 
 	var $url_paso_2 = "{{ route('pag.compra.ver', [ 'codigo' => $codigo, 'paso' => 2 ]) }}";
 	
+	showRowFacturacion();
+	
 	$("#direccion_id").change(function(){
-		if ($(this).val() == '' || $(this).val() == null){
-			$(".btn-eliminar-direccion", 'label').hide();
-		} else {
-			$(".btn-eliminar-direccion", 'label').removeClass('hide').show();
-		}
 		showRowFacturacion();
+
+		$.ajax(rutaDireccion + '/' + $("#direccion_id").val(), {
+			method:'get',
+			success : function(r) {
+				if (typeof(r) === 'string'){
+					aviso(r);
+					return false;
+				}
+
+				if (r.persona_contacto != ''){
+					$("#nombre").val(r.persona_contacto);
+				}
+
+				if (r.persona_cedula != ''){
+					$("#cedula_input").val(r.persona_cedula);
+				}
+
+				var dir = [
+					r.direccion,
+					r.parroquia,
+					r.municipio,
+					r.estado,
+				].join(", ").replace(/, +/g, ", ");
+				
+				if (dir != ''){
+					$("#direccion").val(dir);
+				}
+			}
+		});
 	});
 
 	$("#metodo_envio_id").change(function(){
 		showRowFacturacion();
-	});
-
-	$(".btn-eliminar-direccion", 'label').on('click', function(){
-
 	});
 
 	$('#form-confirmar').submit(function() { 
@@ -403,7 +425,6 @@
 			});
 		});
 	});
-
 
 	function nacionalidad(nac){
 		nac = nac || $("#nacionalidad span").text();

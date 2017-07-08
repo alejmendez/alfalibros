@@ -57,8 +57,11 @@
 							</ul>
 						</li>
 					@else
-						<li class="dropdown">
+						<li>
 							<a href="#" data-toggle="modal" data-target="#login-modal"><b>Login</b></a>
+						</li>
+						<li>
+							<a href="#" data-toggle="modal" data-target="#crear-usuarios-modal"><b>Registrate</b></a>
 						</li>
 					@endif
 				</ul>

@@ -5,6 +5,8 @@ namespace alfalibros\Modules\Base\Models;
 use DB;
 use alfalibros\Modules\Base\Models\Modelo;
 
+use alfalibros\Modules\Configuracion\Models\Configuracion;
+
 use alfalibros\Modules\Base\Models\Bancos;
 use alfalibros\Modules\Base\Models\MetodoEnvio;
 use alfalibros\Modules\Pagina\Models\Producto;
@@ -136,6 +138,9 @@ class Compras extends Modelo
         
         static::deleted(function($model) {
             $model->sale_id;
+            
+            $warehouse = Configuracion::get('warehouse');
+            
             if ($model->estatus == 0) {
                 $dbDefault = \Config::get('database.default');
 
@@ -154,7 +159,7 @@ class Compras extends Modelo
                         DB::connection('phppos')
                             ->table('phppos_location_items')
                             ->where('item_id', $detalle->item_id)
-                            ->where('location_id', 1)
+                            ->where('location_id', $warehouse)
                             ->increment('quantity', $detalle->quantity_purchased);
                     }
                 }

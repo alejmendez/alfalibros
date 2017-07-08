@@ -16,6 +16,8 @@ $(function() {
         return false;
     });
 
+    $('.btn:not(#guardar)', '#botonera').remove();
+
     $('#guardar').on('click', function() {
         $('#formulario').submit();
     });

@@ -139,6 +139,8 @@ class UsuariosController extends Controller
 		}
 		
 		$persona = new Personas();
+		$cliente = new Clientes();
+		/*
 		$cliente = Clientes::where('account_number', $request->account_number)->first();
 
 		if (!$cliente) {
@@ -148,6 +150,7 @@ class UsuariosController extends Controller
 				$cliente = new Clientes();
 			}
 		}
+		*/
 
 		DB::beginTransaction();
 		DB::connection('phppos')->beginTransaction();
@@ -196,6 +199,7 @@ class UsuariosController extends Controller
 				'perfil_id'  => 7,
 				'persona_id' => $persona->person_id,
 				'super'      => 'n',
+				'confirmado' => 's',
 				'codigo'     => str_random(50)
 			]);
 
@@ -254,6 +258,7 @@ class UsuariosController extends Controller
 	public function direccionNueva(Request $request){
         $usuario = auth()->user();
         $data = $request->all();
+
         $data['usuario_id'] = $usuario->id;
         $data['nombre_direccion'] = $request->nombre;
         $data['punto_referencia'] = $request->punto_ref;
@@ -262,6 +267,7 @@ class UsuariosController extends Controller
     	$salida = [
     		's' => 'n', 'msj' => 'No se pudo realizar el registro'
     	];
+
         if($ubicacion){
         	$salida = [
 				'id'      => $ubicacion->id,

@@ -92,9 +92,8 @@ class Controller extends BaseController
 	}
 
 	public function location_id() {
-		// $warehouse = $this->conf('warehouse');
-		// return $warehouse;
-		return 1;
+		$warehouse = $this->conf('warehouse');
+		return $warehouse;
 	}
 
 	public function __categorias($id = 0)

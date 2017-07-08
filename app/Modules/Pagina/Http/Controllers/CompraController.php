@@ -98,7 +98,7 @@ class CompraController extends Controller
 					$compras->cedula : 
 					(is_null($usuario->persona->cliente) ? 
 						'' : 
-						$usuario->persona->cliente->account_number);
+						$usuario->persona->cliente->company_name);
 			}elseif ($paso == 2) {
 				$this->css[] = 'pagina/imprimir-cotizacion.css';
 			}elseif ($paso == 3) {
@@ -253,7 +253,7 @@ class CompraController extends Controller
 			if (is_null($usuario->persona->cliente)) {
 				$cedula = '';
 			} else {
-				$cedula = $usuario->persona->cliente->account_number;
+				$cedula = $usuario->persona->cliente->company_name;
 			}
 
 			$compra = Compras::create([

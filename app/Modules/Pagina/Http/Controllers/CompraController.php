@@ -622,4 +622,22 @@ class CompraController extends Controller
 			});
 		}
 	}
+
+	public function getCampo($campo)
+	{
+		$usuario = auth()->user();
+		$data = [];
+
+		switch ($campo) {
+			case 'direccion':
+				$data = ['' => '- Agregar nueva dirección'] + $usuario->direcciones->pluck('nombre_direccion', 'id')->toArray();
+				break;
+
+			case 'metodo_envio':
+				$data = $this->metodoEnvio();
+				break;
+		}
+
+		return $data;
+	}
 }

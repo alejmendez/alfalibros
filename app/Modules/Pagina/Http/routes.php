@@ -23,7 +23,11 @@ Route::group(['middleware' => 'web', 'namespace' => 'alfalibros\Modules\Pagina\H
 		Route::get('recuperar/{codigo}', 				'UsuariosController@recuperar_clave')->where('codigo', '[a-zA-Z0-9]+')->name('pag.usuarios.recuperarclave');
 		Route::post('recuperar/{codigo}', 				'UsuariosController@recuperar_clave')->where('codigo', '[a-zA-Z0-9]+')->name('pag.usuarios.recuperarclave');
 		Route::get('confirmar/{codigo}', 				'UsuariosController@confirmar')->where('codigo', '[a-zA-Z0-9]+')->name('pag.usuarios.confirmar');
-		Route::post('direccion/nuevo',					'UsuariosController@direccionNueva')->name('pag.usuarios.direccion.nuevo');;
+
+		Route::post('direccion',						'UsuariosController@direccionGuardar')->name('pag.usuarios.direccion.nuevo');
+		Route::get('direccion/{id}',					'UsuariosController@direccionBuscar')->name('pag.usuarios.direccion.buscar');
+		Route::put('direccion/{id}',					'UsuariosController@direccionGuardar')->name('pag.usuarios.direccion.editar');
+		Route::delete('direccion/{id}',					'UsuariosController@direccionEliminar')->name('pag.usuarios.direccion.eliminar');
 	});
 
 	// controlador de Carrito

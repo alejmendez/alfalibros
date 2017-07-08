@@ -135,14 +135,14 @@
 												@elseif ($compra->status == 0 && is_null($compra->bancos_id))
 													<div class="btn-group" style="width: 122px;">
 														@if ($compra->ultimo_paso <= 2)
-														<a href="{{ route('pag.compra.ver', ['codigo' => $compra->codigo, 'paso' => 1]) }}" title="Editar" data-toggle="tooltip" class="btn btn-info">
-															<i class="fa fa-pencil" aria-hidden="true"></i>
+														<a href="{{ route('pag.compra.ver', ['codigo' => $compra->codigo, 'paso' => $compra->ultimo_paso]) }}" title="Resumir Compra" data-toggle="tooltip" class="btn btn-info">
+															<i class="fa fa-shopping-basket" aria-hidden="true"></i>
 														</a>
 														@endif
 														
 														@if ($compra->ultimo_paso >= 3)
-														<a href="{{ route('pag.compra.ver', ['codigo' => $compra->codigo, 'paso' => 3]) }}" title="Editar" data-toggle="tooltip" class="btn btn-info">
-															<i class="fa fa-pencil" aria-hidden="true"></i>
+														<a href="{{ route('pag.compra.ver', ['codigo' => $compra->codigo, 'paso' => $compra->ultimo_paso]) }}" title="Resumir Compra" data-toggle="tooltip" class="btn btn-info">
+															<i class="fa fa-shopping-basket" aria-hidden="true"></i>
 														</a>
 														@endif
 

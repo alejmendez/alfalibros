@@ -15,15 +15,25 @@ class AppUsuarioDireccion extends Migration
     {
         Schema::create('usuario_direccion', function(Blueprint $table){
             $table->increments('id');
+
             $table->integer('usuario_id')->unsigned();
+
             $table->string('nombre_direccion', 150);
             $table->string('persona_contacto', 150)->nullable();
+            $table->string('persona_cedula', 20)->nullable();
+            
             $table->string('telefono', 20)->nullable();
-            $table->string('estado', 50);
-            $table->string('ciudad', 50);
-            $table->string('codigo_postal', 50);
-            $table->text('direccion', 250);
-            $table->text('punto_referencia',250)->nullable();
+
+            $table->string('estado', 50)->nullable();
+            $table->string('municipio', 50)->nullable();
+            $table->string('parroquia', 50)->nullable();
+            $table->string('sector', 50)->nullable();
+            $table->string('ciudad', 50)->nullable();
+            
+            $table->string('codigo_postal', 50)->nullable();
+
+            $table->text('direccion');
+            $table->text('punto_referencia')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

@@ -5,11 +5,13 @@ use DB;
 
 use alfalibros\Modules\Pagina\Http\Controllers\Controller;
 
-use alfalibros\Modules\Pagina\Http\Requests\RegistroRequest;
-
 //Dependencias
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
+//Requests
+use alfalibros\Modules\Pagina\Http\Requests\RegistroRequest;
+use alfalibros\Modules\Pagina\Http\Requests\UsuariosDireccionRequest;
 
 //Modelos
 use alfalibros\Modules\Base\Models\Usuario;
@@ -255,29 +257,74 @@ class UsuariosController extends Controller
 		return $this->view('pagina::Confirmacion');
 	}
 
-	public function direccionNueva(Request $request){
-        $usuario = auth()->user();
-        $data = $request->all();
+	public function direccionGuardar(UsuariosDireccionRequest $request, $id = null)
+	{
+		$usuario = auth()->user();
+		$data = $request->all();
 
         $data['usuario_id'] = $usuario->id;
-        $data['nombre_direccion'] = $request->nombre;
-        $data['punto_referencia'] = $request->punto_ref;
 
-        $ubicacion = UsuarioDireccion::create($data);
-    	$salida = [
-    		's' => 'n', 'msj' => 'No se pudo realizar el registro'
-    	];
+		DB::beginTransaction();
+        try{
+            $ubicacion = is_null($id) ? new UsuarioDireccion() : UsuarioDireccion::find($id);
 
-        if($ubicacion){
-        	$salida = [
-				'id'      => $ubicacion->id,
-				'nombre'  => $ubicacion->nombre_direccion,
-        		's' => 's', 
-				'msj'     => 'Se registró correctamente la dirección'
-        	];
+			$ubicacion->usuario_id       = $usuario->id;
+			
+			$ubicacion->nombre_direccion = $request->nombre_direccion;
+			$ubicacion->persona_contacto = $request->persona_contacto;
+			$ubicacion->persona_cedula   = $request->persona_cedula;
+			$ubicacion->telefono         = $request->telefono;
+			$ubicacion->estado           = $request->estado;
+			$ubicacion->municipio        = $request->municipio;
+			$ubicacion->parroquia        = $request->parroquia;
+			$ubicacion->sector           = $request->sector;
+			$ubicacion->ciudad           = $request->ciudad;
+			$ubicacion->codigo_postal    = $request->codigo_postal;
+			$ubicacion->direccion        = $request->direccion;
+			$ubicacion->punto_referencia = $request->punto_referencia;
+
+            $ubicacion->save();
+        } catch(QueryException $e) {
+            DB::rollback();
+            return [ 's' => 'n', 'msj' => 'No se pudo guardar la dirección' ];
+        } catch(Exception $e) {
+            DB::rollback();
+            return [ 's' => 'n', 'msj' => 'No se pudo guardar la dirección' ];
+        }
+        DB::commit();
+
+		return [
+			'id'      => $ubicacion->id,
+			'nombre'  => $ubicacion->nombre_direccion,
+			's'       => 's', 
+			'msj'     => 'Se registró correctamente la dirección'
+		];
+    }
+
+	public function direccionBuscar(Request $request, $id)
+	{
+        $UsuarioDireccion = UsuarioDireccion::find($id);
+
+        if ($UsuarioDireccion) {
+            return array_merge($UsuarioDireccion->toArray(), [
+                's' => 's',
+                'msj' => trans('controller.buscar')
+            ]);
         }
 
-        return $salida;
+        return trans('controller.nobuscar');
+	}
 
-    }
+	public function direccionEliminar(Request $request, $id = null)
+	{
+		try{
+            UsuarioDireccion::destroy($id);
+        } catch (QueryException $e) {
+            return [ 's' => 'n', 'msj' => 'No se pudo eliminar la dirección' ];
+        } catch (Exception $e) {
+            return [ 's' => 'n', 'msj' => 'No se pudo eliminar la dirección' ];
+        }
+
+        return ['s' => 's', 'msj' => trans('controller.eliminar')];
+	}
 }

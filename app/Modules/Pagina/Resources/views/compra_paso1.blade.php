@@ -11,54 +11,81 @@
 			{!! Form::open(['id' => 'form-confirmar','url' => 'compra/facturacion']) !!}
 				<div class="row">
 					{!! Form::hidden('codigo', $compras->codigo) !!}
-						<div class="form-group col-xs-12">
-							<label for="direccion_id">
-								Dirección de envío: 
-								<i class="fa fa-plus" data-ele="direccion_id" data-toggle="modal" data-target="#nuevaDireccionModal" title="Registrar una Dirección">&nbsp; Agregar</i>
-							</label>
-
-							{!! Form::select('direccion_id', $usuario->direcciones->pluck('nombre_direccion', 'id'), $compras->direccion_id, [
-								'id'	=> 'direccion_id',
-								'placeholder' => '- Seleccione una direccion de envío',
-								'required'    => true,
-								'class'	=> 'form-control'
-							]) !!}
-							
-
-						</div>
+					<div class="form-group col-sm-6 col-xs-12">
+						<label for="direccion_id">
+							Dirección de envío: 
+							<div class="btn-group direccion">
+								<button type="button" class="btn btn-primary agregar" data-toggle="tooltip" title="Agregar Nueva Direcci&oacute;n" >
+									<i class="fa fa-plus"></i>
+									Agregar
+								</button>
+								<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<span class="caret"></span>
+									<span class="sr-only">Alternar desplegable</span>
+								</button>
+								<ul class="dropdown-menu">
+									<li>
+										<a href="#" class="agregar" title="Agregar Nueva Direcci&oacute;n" data-toggle="tooltip" >
+											<i class="fa fa-plus"></i>
+											Agregar
+										</a>
+									</li>
+									<li>
+										<a href="#" class="editar" title="Editar la Direcci&oacute;n Seleccionada" data-toggle="tooltip" >
+											<i class="fa fa-pencil"></i>
+											Editar
+										</a>
+									</li>
+									<li>
+										<a href="#" class="eliminar" title="Eliminar la Direcci&oacute;n Seleccionada" data-toggle="tooltip" >
+											<i class="fa fa-remove"></i>
+											Eliminar
+										</a>
+									</li>
+								</ul>
+							</div>
+						</label>
 						
-						<div class="form-group col-xs-12">
-							<label for="metodo_envio_id">
-								Método de Envío:
-							</label>
-
-							{!! Form::select('metodo_envio_id', $controller->metodoEnvio(), $compras->metodo_envio_id, [
-								'id'	=> 'metodo_envio_id',
-								'placeholder' => '- Seleccione un método de envío',
-								'required'    => true,
-								'class'	=> 'form-control'
-							]) !!}
-							
-
-						</div>
-	
+						{!! Form::select('direccion_id', $controller->getCampo('direccion'), $compras->direccion_id, [
+							'id'          => 'direccion_id',
+							'required'    => true,
+							'class'	      => 'form-control',
+							'class_cont'  => 'col-sm-6'
+						]) !!}
+					</div>
 					
+					<div class="col-xs-12"></div>
+					
+					<div class="form-group col-sm-6 col-xs-12">
+						<label for="metodo_envio_id">
+							Método de Envío:
+						</label>
+
+						{!! Form::select('metodo_envio_id', $controller->getCampo('metodo_envio'), $compras->metodo_envio_id, [
+							'id'          => 'metodo_envio_id',
+							'placeholder' => '- Seleccione un método de envío',
+							'required'    => true,
+							'class'	      => 'form-control',
+							'class_cont'  => 'col-sm-6'
+						]) !!}
+					</div>
 				</div>
 
-				<div class="row">
+				<div class="row row-facturacion">
 					<div class="col-xs-12">
-						<h4>Datos de Facturación</h4>
+						<h2 style="font-weight: bold;">Datos de Facturación</h2>
 					</div>
 
 					{!! Form::bsText('nombre', $compras->nombre != '' ? $compras->nombre  : $usuario->persona->full_name, [
-						'label'       => 'Razon Social',
-						'placeholder' => 'Razon Social o Nombre',
-						'help'        => 'Razon Social o Nombre del Cliente',
+						'label'       => 'Razon Social o Nombre del Cliente',
+						'placeholder' => false,
 						'required'    => true,
-						'class_cont'  => 'col-sm-12'
+						'class_cont'  => 'col-sm-6'
 					]) !!}
 					
-					<div class="form-group col-sm-12">
+					<div class="col-xs-12"></div>
+
+					<div class="form-group col-sm-6">
 						<label for="cedula" class="requerido">C&eacute;dula o Rif</label>
 						<input id="cedula" nombre="cedula" type="hidden" value="{{ strtoupper($compras->cedula) }}" />
 						
@@ -76,21 +103,21 @@
 									@endforeach
 								</ul>
 							</div>
-							<input class="cedula form-control" placeholder="RIF/C.I" required id="cedula_input" type="text" value="{{ substr($compras->cedula, 1) }}">
+							<input id="cedula_input" class="cedula form-control" 
+								required type="text" value="{{ substr($compras->cedula, 1) }}" 
+								data-toggle="tooltip"
+								title="RIF/C.I del Cliente ejemplo: V15467845, J854575640, E8897547" />
 						</div>
-						<!-- /btn-group -->
-						
-						<span class="help-block">RIF/C.I del Cliente ejemplo: V15467845, J854575640, E8897547</span>
 					</div>
 					
-		
+					<div class="col-xs-12"></div>
+
 					{!! Form::bsTextarea('direccion', $compras->direccion != '' ? $compras->direccion :  $usuario->persona->address_1, [
 						'label'       => 'Dirección Fiscal',
-						'placeholder' => 'Dirección Fiscal',
-						'help'        => 'Dirección Fiscal',
+						'placeholder' => false,
 						'required'    => true,
 						'rows'        => 3,
-						'class_cont'  => 'col-sm-12'
+						'class_cont'  => 'col-sm-6'
 					]) !!}
 
 					<div class="form-group col-sm-12 text-right">
@@ -116,27 +143,31 @@
 			</div>
 			<div class="modal-body">
 				<div class="row">
-					
-					{!! Form::open(['id' => 'form-nva-direccion', 'url' => 'usuarios/direccion/nuevo']) !!}
-
-
-						{!! Form::bsText('nombre', '', [
+					{!! Form::open(['id' => 'form-nueva-direccion', 'url' => route('pag.usuarios.direccion.nuevo')]) !!}
+						{!! Form::bsText('nombre_direccion', '', [
 							'label'       => 'Nombre (Para uso personal)',
-							'placeholder' => 'Nombre ',
+							'placeholder' => false,
 							'required'    => true,
 							'class_cont'  => 'col-sm-12'
 						]) !!}
 
-						{!! Form::bsText('persona_contacto', $usuario->persona->full_name, [
+						{!! Form::bsText('persona_contacto', '', [
 							'label'       => 'Persona de Contacto',
-							'placeholder' => 'Persona  contacto',
+							'placeholder' => false,
 							'required'    => true,
 							'class_cont'  => 'col-sm-12'
 						]) !!}
 
-						{!! Form::bsText('telefono', $usuario->persona->phone_number, [
+						{!! Form::bsText('persona_cedula', '', [
+							'label'       => 'Cedula de al Persona de Contacto',
+							'placeholder' => false,
+							'required'    => true,
+							'class_cont'  => 'col-sm-12'
+						]) !!}
+
+						{!! Form::bsText('telefono', '', [
 							'label'       => 'Telefono',
-							'placeholder' => 'Telefono',
+							'placeholder' => false,
 							'help'        => 'Telefono de Contacto',
 							'required'    => true,
 							'class_cont'  => 'col-sm-12'
@@ -145,37 +176,58 @@
 
 						{!! Form::bsText('estado', '', [
 							'label'       => 'Estado',
-							'placeholder' => 'Estado',
+							'placeholder' => false,
+							'required'    => true,
+							'class_cont'  => 'col-sm-12'
+						]) !!}
+
+						{!! Form::bsText('municipio', '', [
+							'label'       => 'Municipio',
+							'placeholder' => false,
+							'required'    => true,
+							'class_cont'  => 'col-sm-12'
+						]) !!}
+
+						{!! Form::bsText('parroquia', '', [
+							'label'       => 'Parroquia',
+							'placeholder' => false,
+							'required'    => true,
+							'class_cont'  => 'col-sm-12'
+						]) !!}
+
+						{!! Form::bsText('sector', '', [
+							'label'       => 'Sector',
+							'placeholder' => false,
 							'required'    => true,
 							'class_cont'  => 'col-sm-12'
 						]) !!}
 						
 						{!! Form::bsText('ciudad', '', [
 							'label'       => 'Ciudad',
-							'placeholder' => 'Ciudad',
+							'placeholder' => false,
 							'required'    => true,
 							'class_cont'  => 'col-sm-12'
 						]) !!}
 
 						{!! Form::bsText('codigo_postal', '', [
 							'label'       => 'Código Postal',
-							'placeholder' => 'Código Postal',
+							'placeholder' => false,
 							'required'    => true,
 							'class_cont'  => 'col-sm-12'
 						]) !!}
 						
 						{!! Form::bsTextarea('direccion', $usuario->persona->address_1, [
 							'label'       => 'Dirección de Envio',
-							'placeholder' => 'Dirección de Envio',
+							'placeholder' => false,
 							'help'        => 'Dirección de Envio',
 							'required'    => true,
 							'rows'        => 3,
 							'class_cont'  => 'col-sm-12'
 						]) !!}
 						
-						{!! Form::bsText('punto_ref', '', [
+						{!! Form::bsText('punto_referencia', '', [
 							'label'       => 'Punto de Referencia',
-							'placeholder' => 'Punto de Referencia',
+							'placeholder' => false,
 							'required'    => true,
 							'class_cont'  => 'col-sm-12'
 						]) !!}
@@ -198,37 +250,56 @@
 @endsection
 
 @push('js')
-	<style type="text/css">
-		.portlet {
-		    margin-top: 0;
-		    margin-bottom: 0px;
-		    padding: 0;
-		    border-radius: 4px;
-		}
-		.mt-step-col a{
-			text-decoration: none;
-			color: #000;
-		}
-		label .fa-plus {
-		    color: #70BF2B;
-		    cursor: pointer;
-		}
-	</style>
+<style type="text/css">
+.row-facturacion {
+	display: none;
+}
+.portlet {
+	margin-top: 0;
+	margin-bottom: 0px;
+	padding: 0;
+	border-radius: 4px;
+}
+.mt-step-col a{
+	text-decoration: none;
+	color: #000;
+}
+</style>
 @endpush
 @push('js')
 <script type="text/javascript">
-var direccion = $('#direccion_id').val();
+	var direccion = $('#direccion_id').val(),
+		rutaDireccion = '{{ route('pag.usuarios.direccion.nuevo') }}';
+
 	$.mask.definitions['R']='[JGVEjgve]';
 	$(".cedula").mask("999999?999");
+
 	$('#cedula_input').on('blur',function(){
 		 nacionalidad($("#nacionalidad span").text());
 	});
+
 	if( !direccion ){
 		$('#cotizacion').remove();
 	}
 
-	$("#datosBancosModal").modal();
 	var $url_paso_2 = "{{ route('pag.compra.ver', [ 'codigo' => $codigo, 'paso' => 2 ]) }}";
+	
+	$("#direccion_id").change(function(){
+		if ($(this).val() == '' || $(this).val() == null){
+			$(".btn-eliminar-direccion", 'label').hide();
+		} else {
+			$(".btn-eliminar-direccion", 'label').removeClass('hide').show();
+		}
+		showRowFacturacion();
+	});
+
+	$("#metodo_envio_id").change(function(){
+		showRowFacturacion();
+	});
+
+	$(".btn-eliminar-direccion", 'label').on('click', function(){
+
+	});
 
 	$('#form-confirmar').submit(function() { 
 		// submit the form 
@@ -253,29 +324,127 @@ var direccion = $('#direccion_id').val();
 	});
 
 	$('#btn_guardar').click(function() { 
+		var id = $("#direccion_id").val();
 		
-		// submit the form 
-		$('#form-nva-direccion').ajaxSubmit({
-			success : function(r){
-				if(r.s == 's'){
-					$("#nuevaDireccionModal").modal('hide');
+		var $opciones = {
+			'url' : $('#form-nueva-direccion').attr('action'),
+			'type' : 'POST',
+			'success': function(r){
+				aviso(r);
+				if(r.s == 'n'){
+					return;
+				}
+
+				$("#nuevaDireccionModal").modal('hide');
+				if (id > 0){
+					$('#direccion_id option[value=\'' + r.id + '\']').html(r.nombre);
+				} else {
 					$('#direccion_id').append('<option value=' + r.id + '>' + r.nombre + '</option>');
 					$('#direccion_id').val(r.id);
-				}else{
-					alert(r.msj);
-					return false;
 				}
 			}
-		});
-		
-		// return false to prevent normal browser submit and page navigation 
+		};
+
+		if (id > 0){
+			$opciones.url = $opciones.url + '/' + id;
+			$opciones.data = {
+				'_method': 'put'
+			};
+		}
+
+		$('#form-nueva-direccion').ajaxSubmit($opciones);
+
 		return false; 
 	});
+
+	$('.agregar').click(function(e){
+		e.preventDefault();
+		$("#nuevaDireccionModal").modal('show');
+		$("#form-nueva-direccion").get(0).reset();
+	});
+
+	$('.editar').click(function(e){
+		e.preventDefault();
+		var direccion = $("#direccion_id").val();
+		
+		if (direccion == null || direccion == '') {
+			return;
+		}
+
+		$("#nuevaDireccionModal").modal('show');
+		$("#form-nueva-direccion").get(0).reset();
+
+		buscarDireccion(direccion);
+	});
+	
+	$('.eliminar').click(function(e){
+		e.preventDefault();
+		var direccion = $("#direccion_id").val();
+		
+		if (direccion == null || direccion == '') {
+			return;
+		}
+
+		bootbox.confirm("&iquest;Esta seguro que desea eliminar esta dirección?", function(result) {
+			if (!result){
+				return true;
+			}
+
+			$.ajax({
+				'url' : rutaDireccion + '/' + direccion,
+				'data' : {
+					'_method': 'delete'
+				},
+				'type' : 'POST',
+				'success' : function(r){
+					aviso(r);
+					$('#direccion_id option[value=\'' + direccion + '\']').remove();
+				}
+			});
+		});
+	});
+
 
 	function nacionalidad(nac){
 		nac = nac || $("#nacionalidad span").text();
 		$("#nacionalidad span").text(nac);
 		$("#cedula").val(nac + $("#cedula_input").val());
+	}
+
+	function showRowFacturacion() {
+		var direccion = $("#direccion_id").val(),
+		    metodo_envio = $("#metodo_envio_id").val();
+		
+		console.log(direccion, metodo_envio);
+
+		if (!(direccion == null || direccion == '') &&
+			!(metodo_envio == null || metodo_envio == '')) {
+			$('.row-facturacion').show();
+		} else {
+			$('.row-facturacion').hide();
+		}
+	}
+
+	function buscarDireccion(id) {
+		$.ajax(rutaDireccion + '/' + id, {
+			method:'get',
+			success : function(r) {
+				if (typeof(r) === 'string'){
+					aviso(r);
+					return false;
+				}
+
+				aviso(r.msj, 'info', 'Busqueda');
+
+				$.each(r, function(id, valor){
+					var ele = $('#' + id, "#form-nueva-direccion");
+
+					if (!ele.length){ return; }
+
+					ele.val(valor);
+				});
+			}
+		});
 	}
 </script>
 @endpush

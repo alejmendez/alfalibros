@@ -19,7 +19,7 @@
 				</p>
 				@endif
 				<p>
-					{{ $producto->descripcion }}
+					{!! $producto->descripcion !!}
 				</p>
 				<a href="{{ route('pag.categoria', ['id' => $producto->categoria_id]) }}" class="fs_medium color_grey d_inline_b m_bottom_3">Categoria: <i>{{ $producto->categoria }}</i></a>
 				<div class="im_half_container m_bottom_10">

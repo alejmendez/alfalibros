@@ -267,8 +267,30 @@ class UsuariosController extends Controller
 		DB::beginTransaction();
         try{
             $ubicacion = is_null($id) ? new UsuarioDireccion() : UsuarioDireccion::find($id);
+			if (is_null($id)) {
+            	$ubicacion = new UsuarioDireccion();
+				$cliente = Clientes::create([
+					//'account_number'             => $request->account_number,
+					'person_id'                  => $usuario->persona->person_id,
+					'override_default_tax'       => 0,
+					'company_name'               => $request->persona_cedula,
+					'balance'                    => 0,
+					'points'                     => 0,
+					'current_spend_for_points'   => 0,
+					'current_sales_for_discount' => 0,
+					'taxable'                    => 1,
+					'card_issuer'                => '',
+				]);
+			} else {
+            	$ubicacion = UsuarioDireccion::find($id);
+				$cliente = Clientes::find($ubicacion->customer_id);
 
+				$cliente->company_name = $request->persona_cedula;
+				$cliente->save(); 
+			}
+			
 			$ubicacion->usuario_id       = $usuario->id;
+			$ubicacion->customer_id      = $cliente->id;
 			
 			$ubicacion->nombre_direccion = $request->nombre_direccion;
 			$ubicacion->persona_contacto = $request->persona_contacto;

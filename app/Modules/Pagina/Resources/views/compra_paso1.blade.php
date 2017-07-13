@@ -86,7 +86,7 @@
 					<div class="col-xs-12"></div>
 
 					<div class="form-group col-sm-6">
-						<label for="cedula" class="requerido">C&eacute;dula o Rif</label>
+						<label for="cedula_input" class="requerido">C&eacute;dula o Rif</label>
 						<input id="cedula" nombre="cedula" type="hidden" value="{{ strtoupper($compras->cedula) }}" />
 						
 						<div class="input-group">
@@ -158,12 +158,30 @@
 							'class_cont'  => 'col-sm-12'
 						]) !!}
 
-						{!! Form::bsText('persona_cedula', '', [
-							'label'       => 'Cedula de al Persona de Contacto',
-							'placeholder' => false,
-							'required'    => true,
-							'class_cont'  => 'col-sm-12'
-						]) !!}
+						<div class="form-group col-sm-12">
+							<label for="cedula_persona_input" class="requerido">Cedula de al Persona de Contacto</label>
+							<input id="persona_cedula" nombre="persona_cedula" type="hidden" value="" />
+							
+							<div class="input-group">
+								<div class="input-group-btn">
+									<button id="nacionalidad_persona" type="button" class="btn green dropdown-toggle" data-toggle="dropdown">
+										<span>V</span>
+										<i class="fa fa-angle-down"></i>
+									</button>
+									<ul class="dropdown-menu">
+										@foreach(['V', 'E', 'J', 'G'] as $nacionalidad)
+										<li>
+											<a href="javascript:nacionalidad_persona('{{ $nacionalidad }}');"> {{ $nacionalidad }} </a>
+										</li>
+										@endforeach
+									</ul>
+								</div>
+								<input id="cedula_persona_input" class="cedula form-control" 
+									required type="text" value="" 
+									data-toggle="tooltip"
+									title="RIF/C.I del Cliente ejemplo: V15467845, J854575640, E8897547" />
+							</div>
+						</div>
 
 						{!! Form::bsText('telefono', '', [
 							'label'       => 'Telefono',
@@ -276,6 +294,10 @@
 
 	$('#cedula_input').on('blur',function(){
 		 nacionalidad($("#nacionalidad span").text());
+	});
+
+	$('#cedula_persona_input').on('blur',function(){
+		 nacionalidad_persona($("#nacionalidad_persona span").text());
 	});
 
 	if( !direccion ){
@@ -430,6 +452,12 @@
 		nac = nac || $("#nacionalidad span").text();
 		$("#nacionalidad span").text(nac);
 		$("#cedula").val(nac + $("#cedula_input").val());
+	}
+	
+	function nacionalidad_persona(nac){
+		nac = nac || $("#nacionalidad_persona span").text();
+		$("#nacionalidad_persona span").text(nac);
+		$("#cedula_persona").val(nac + $("#cedula_persona_input").val());
 	}
 
 	function showRowFacturacion() {

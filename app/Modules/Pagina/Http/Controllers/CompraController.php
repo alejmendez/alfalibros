@@ -421,8 +421,10 @@ class CompraController extends Controller
 
 				unset($venta['sale_id'], $venta['sale_time']);
 				$venta['sale_time'] = Carbon::now();
+				//$venta['customer_id'] = Carbon::now();
 
 				$venta = Venta::create($venta);
+				//dd($venta);
 				$errores = [];
 
 				foreach ($productos as $producto) {

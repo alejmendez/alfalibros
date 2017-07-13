@@ -50,7 +50,7 @@ $lista = [
         </div>
     </div>
 </div>
-    @if($paso != 4 and $paso != 2)
+    @if($paso != 4 && $paso != 2 && $paso != 3)
         <div class="row">
             <div class="col-xs-12 text-right" id="conteo">
                 <span id="texto"></span>

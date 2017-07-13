@@ -13,58 +13,58 @@
 					
 					{!! Form::hidden('codigo', $compras->codigo) !!}
 
-					<h4 class="col-sm-12">Datos Bancarios</h4>
+					<h2 class="col-sm-12">Datos Bancarios</h2>
 					<h5 class="col-sm-12">
-						 Despues de realizar la transferencia, rellene los siguientes campos para así poder verificarla en un lapso de 24 horas aproximadamente 
+						 Después de realizar la transferencia, rellene 
+						 los siguientes campos para que nuestro equipo
+						 pueda confirmar su orden.
 					</h5>
 
 					{!! Form::bsText('banco_usuario', '', [
 						'label'       => 'Banco del cliente',
-						'placeholder' => 'Banco del cliente',
-						'help'        => 'Nombre del Banco del Cliente',
+						'placeholder' => false,
+						'title'       => 'Nombre del Banco del Cliente',
+						'data-toggle' => 'tooltip',
 						'required'    => true,
-						'class_cont'  => 'col-sm-12'
+						'class_cont'  => 'col-sm-6'
 					]) !!}
+					<div class="col-sm-12"></div>
 
 					{!! Form::bsText('codigo_transferencia', '', [
-						'label'       => 'Codigo de transferencia',
-						'placeholder' => 'Codigo de transferencia',
-						'help'        => 'Codigo del comprobante de transferencia',
+						'label'       => 'Numero de Recibo',
+						'placeholder' => false,
+						'title'       => 'Numero de Recibo de transferencia',
+						'data-toggle' => 'tooltip',
 						'required'    => true,
-						'class_cont'  => 'col-sm-12'
+						'class_cont'  => 'col-sm-6'
 					]) !!}
+					<div class="col-sm-12"></div>
 
-					<div class="form-group col-sm-12">
-					    <label class="requerido">Monto</label>
+					<div class="form-group col-sm-6">
+					    <label class="requerido">Monto a Pagar</label>
 					    <div class="form-control">
 					    	{{ $compras->monto }} {{ $controller->conf('moneda') }}
 					    </div>
 				    </div>
+					<div class="col-sm-12"></div>
 
 					{!! Form::bsSelect('bancos_id', $controller->bancos(), '', [
 						'label'       => 'Banco Receptor',
 						'placeholder' => '- Seleccione un Banco',
-						'help'        => 'Seleccione el banco al cual realizó la transferencia',
+						'title'       => 'Seleccione el banco al cual realizó la transferencia',
+						'data-toggle' => 'tooltip',
 						'required'    => true,
-						'class_cont'  => 'col-sm-12'
+						'class_cont'  => 'col-sm-6'
 					]) !!}
+					<div class="col-sm-12"></div>
 					
-					<div class="form-group col-sm-12">
-					    <label for="monto" class="requerido">Imagen del comprobante</label>
-				        {!! Form::file('image', '', [
-				        	'required' => 'required',
-				        ]) !!}
-
-				        <span class="help-block">La imagen puede ser .pdf, .jpeg, .jpg &oacute; .png</span>
-				    </div>
-
 					{!! Form::bsTextarea('nota', '', [
 						'label'       => 'Nota Adicional',
-						'placeholder' => 'Nota Adicional',
-						'help'        => 'Nota Adicional',
+						'placeholder' => false,
 						'rows'        => 3,
-						'class_cont'  => 'col-sm-12'
+						'class_cont'  => 'col-sm-6'
 					]) !!}
+					<div class="col-sm-12"></div>
 
 					<div class="form-group col-sm-12 text-right">
 						<button id="btn_confirmar" type="submit" class="btn btn-success btn-lg">
@@ -79,59 +79,47 @@
 					
 					{!! Form::hidden('codigo', $compras->codigo) !!}
 
-					<h4 class="col-sm-12">Datos Bancarios</h4>
+					<h2 class="col-sm-12" style="font-weight: bold;">Datos Bancarios</h2>
 
-					<div class="form-group col-sm-12">
+					<div class="form-group col-sm-6">
 					    <label for="banco_usuario" class="requerido">Banco del cliente</label>
-				        <div class="form-control">
+				        <div class="form-control" data-toggle="tooltip" title="Nombre del Banco del Cliente">
 				        	{{ $compras->banco_usuario}}
 				        </div>
-
-				        <span class="help-block">Nombre del Banco del Cliente</span>
 				    </div>
-
-					<div class="form-group col-sm-12">
-					    <label for="codigo_transferencia" class="requerido">Codigo de transferencia</label>
-				        <div class="form-control">
+					<div class="col-sm-12"></div>
+					
+					<div class="form-group col-sm-6">
+					    <label for="codigo_transferencia" class="requerido">Numero de Recibo</label>
+				        <div class="form-control" data-toggle="tooltip" title="Numero de Recibo de transferencia">
 				        	{{ $compras->codigo_transferencia }}
 				        </div>
-				        <span class="help-block">Codigo del comprobante de transferencia</span>
 				    </div>
+					<div class="col-sm-12"></div>
 
-					<div class="form-group col-sm-12">
-					    <label class="requerido">Monto</label>
+					<div class="form-group col-sm-6">
+					    <label class="requerido">Monto a Transferir</label>
 					    <div class="form-control">
 					    	{{ $compras->monto }} {{ $controller->conf('moneda') }}
 					    </div>
 				    </div>
+					<div class="col-sm-12"></div>
 
-				    <div class="form-group col-sm-12">
+				    <div class="form-group col-sm-6">
 					    <label for="bancos_id" class="requerido">Banco Receptor</label>
-				        <div class="form-control">
+				        <div class="form-control" data-toggle="tooltip" title="Banco al cual realizó la transferencia">
 				        	{{ $compras->bancos->banco }}
-				        	
 				        </div>
-
-				        <span class="help-block">Banco al cual realizó la transferencia</span>
 				    </div>
-					
-					<div class="form-group col-sm-12">
-					    <label for="monto" class="requerido">Comprobante de Transferencia</label>
-					    <div class="form-control">
-					        <a href="{{ url('public/soportes/pagos/'.$compras->comprobante) }}" style="text-decoration: none">
-					        	<i class="fa fa-file-image-o"></i> Comprobante adjunto
-					        </a>
-					    </div>
-				    </div>
+					<div class="col-sm-12"></div>
 
-					<div class="form-group col-sm-12">
+					<div class="form-group col-sm-6">
 					    <label for="nota" class="requerido">Nota Adicional</label>
 				        <div class="form-control">
-				        	{{ $compras->nota}}
+				        	{{ $compras->nota }}
 				        </div>
-
-				        <span class="help-block">Nota Adicional</span>
 				    </div>
+					<div class="col-sm-12"></div>
 
 				    @if (is_null($compras->bancos_id) && $compras_suspendida == 0)
 						<div class="form-group col-sm-12 text-right">
@@ -154,6 +142,7 @@
 		@endif
 	</div>
 </div>
+
 <div id="datosBancosModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="datosBancosModalLabel">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
@@ -164,7 +153,15 @@
 			<div class="modal-body">
 				@if(is_null($compras->bancos_id))
 					<p>
-						Cuenta con un limite de <b title="Hata el {{ $compras->created_at->addHour()->format('d/m/Y h:i:s a') }}">{{ $compras->created_at->addHour()->diffInMinutes(\Carbon\Carbon::now()) }} minutos</b> a partir de este momento para completar el pago, su(s) artículo(s) se encuentra(n) apartado(s), Si no completa el pago antes de finalizar el tiempo el (los) items volverán a estar disponibles al público.
+						Cuenta con un limite de 
+						<b title="Hata el {{ $compras->created_at->addHour()->format('d/m/Y h:i:s a') }}">
+							<time datetime="{!! $compras->created_at->addHour()->toRfc3339String() !!}" class="age">
+								{{ $compras->created_at->addHour()->diffInMinutes(\Carbon\Carbon::now()) }} minutos
+							</time>
+						</b> 
+						a partir de este momento para completar el pago, su(s) artículo(s) se 
+						encuentra(n) apartado(s), Si no completa el pago antes de finalizar el tiempo 
+						el (los) items volverán a estar disponibles al público.
 					</p>
 				@endif
 			
@@ -195,6 +192,14 @@
 							<td class="active">Correo</td>
 							<td>{{ $banco->correo }}</td>
 						</tr>
+						<tr>
+							<td class="active">Referencia</td>
+							<td>Compra N&deg;: {{ $compras->sale_id }}</td>
+						</tr>
+						<tr>
+							<td class="active">Monto a Pagar</td>
+							<td>{{ number_format($compras->monto, 2, ',', '.') }} {{ $controller->conf('moneda') }}</td>
+						</tr>
 						@endforeach
 					</tbody>
 				</table>
@@ -205,6 +210,7 @@
 		</div>
 	</div>
 </div>
+
 @endsection
 
 @push('css')

@@ -29,6 +29,24 @@
 								@endif
 							</div>
 						</h3>
+
+						<div class="hidden-print">
+							@if($compras_suspendida > 0)
+							<div class="alert alert-warning alert-dismissible  text-left" role="alert">
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								<strong>Disculpe...</strong> 
+								Usted tiene compras pendientes por aprobar o concretar, debe esperar a 
+								que se culmine el proceso de aprobación
+							</div>
+							@else
+								<div class="alert alert-info alert-dismissible text-left" role="alert">
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+									<i class="fa fa-info"></i>
+									Verifique todos los productos antes de realizar su compra y proceda a 
+									realizar el pago de la misma.
+								</div>
+							@endif
+						</div>
 						<hr/>
 					</div>
 					<div class="col-md-7 text-center">
@@ -173,45 +191,6 @@
 		@endif
 	</div>
 </div>
-
-<div id="informacionModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="informacionModalLabel">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="informacionModalLabel">Información.</h4>
-			</div>
-			<div class="modal-body">
-				<div class="row">
-					@if($compras_suspendida > 0)
-						<div class="col-sm-12 text-center">
-							<i class="fa fa-exclamation-triangle fa-5x gracias text-warning" style="text-align: center;padding: 30px;"></i> <br>
-							<p class="text-center" style="text-align: center;">
-								<h3>Disculpe... </h3>
-								<br>
-								Usted tiene compras pendientes por aprobar o concretar, debe esperar a que se culmine el proceso de aprobación
-							</p>
-						</div>
-					@else
-						<div class="col-sm-12 text-center">
-							<i class="fa fa-info-circle fa-5x gracias text-primary" style="text-align: center;padding: 30px;"></i> <br>
-							<p class="text-center" style="text-align: center;">
-								<h3>Información</h3>
-								<br>
-								Verifique todos los productos antes de realizar su compra y proceda a realizar el pago de la misma.
-							</p>
-						</div>
-					@endif
-				</div>
-
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-			</div>
-		</div>
-	</div>
-</div>
-
 
 
 @endsection

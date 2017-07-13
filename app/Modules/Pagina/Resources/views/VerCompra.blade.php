@@ -77,7 +77,6 @@
 															<i class="fa fa-remove" aria-hidden="true"></i>
 														</a>
 													</div>
-
 												@endif
 											</td>
 										</tr>

@@ -328,7 +328,11 @@ class CompraController extends Controller
 		DB::commit();
 		DB::connection('phppos')->commit();
 
-		return 'Acabas de confirmar tu compra, nuestro personal estará verificando la información, esto puede tardar algunos minutos.';
+		//return 'Acabas de confirmar tu compra, nuestro personal estará verificando la información, esto puede tardar algunos minutos.';
+		return 'Gracias por su compra, usted recibirá dentro de 24 a 48 horas 
+		(días hábiles) su confirmación por parte de nuestro equipo, Una vez 
+		confirmada su orden los productos serán despachados a la dirección de 
+		envío que nos suministró.';
 	}
 
 	public function cancelar(Request $request, $codigo = '')

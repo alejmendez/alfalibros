@@ -37,6 +37,7 @@ class Controller extends BaseController
 	public $libreriasIniciales = [
 		'OpenSans', 'font-awesome',
 		'animate', 'bootstrap', 'bootbox',
+		'maskedinput',
 		//'owl-carousel',
 		'pace', 'jquery-form', 'pnotify',
 		'modernizr','components-metronic'

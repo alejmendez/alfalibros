@@ -21,7 +21,7 @@ function ajaxComplete(x, e, o) {
 
                 $.each(x.responseJSON, function(id, valor) {
                     for (var i = 0; i < valor.length; i++) {
-                        msj += valor[i] + "\n";
+                        msj += valor[i] + "<br />";
                     }
                 });
 

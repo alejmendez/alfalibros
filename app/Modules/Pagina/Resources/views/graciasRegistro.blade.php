@@ -11,7 +11,9 @@
 				<p class="text-center" style="text-align: center;">
 					<h3>¡Gracias por Registrarte! </h3>
 					<br>
-					Ya puedes iniciar sesión en tu cuenta haciendo <a href="#" data-toggle="modal" data-target="#login-modal">click aquí</a>
+					Ya puedes iniciar sesión en tu cuenta
+					
+					<a href="#" data-toggle="modal" data-target="#login-modal">click aquí</a>
 				</p>
 			</div>
 		</div>
@@ -25,4 +27,12 @@
 		color:#337AB7;
 	}
 </style>
+@endpush
+
+@push('js')
+<script>
+	setTimeout(function() {
+		location.href = "{{ route('pag.index') }}";
+	}, 8000);
+</script>
 @endpush

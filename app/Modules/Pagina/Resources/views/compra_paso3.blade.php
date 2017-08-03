@@ -20,50 +20,108 @@
 						 pueda confirmar su orden.
 					</h5>
 
-					{!! Form::bsText('banco_usuario', '', [
-						'label'       => 'Banco del cliente',
-						'placeholder' => false,
-						'title'       => 'Nombre del Banco del Cliente',
-						'data-toggle' => 'tooltip',
-						'required'    => true,
-						'class_cont'  => 'col-sm-6'
-					]) !!}
-					<div class="col-sm-12"></div>
+					<div class="col-sm-6">
+						<div class="row">
+						{!! Form::bsText('banco_usuario', '', [
+							'label'       => 'Banco del cliente',
+							'placeholder' => false,
+							'title'       => 'Nombre del Banco del Cliente',
+							'data-toggle' => 'tooltip',
+							'required'    => true,
+							'class_cont'  => 'col-sm-12'
+						]) !!}
+						<div class="col-sm-12"></div>
 
-					{!! Form::bsText('codigo_transferencia', '', [
-						'label'       => 'Numero de Recibo',
-						'placeholder' => false,
-						'title'       => 'Numero de Recibo de transferencia',
-						'data-toggle' => 'tooltip',
-						'required'    => true,
-						'class_cont'  => 'col-sm-6'
-					]) !!}
-					<div class="col-sm-12"></div>
+						{!! Form::bsText('codigo_transferencia', '', [
+							'label'       => 'Numero de Recibo',
+							'placeholder' => false,
+							'title'       => 'Numero de Recibo de transferencia',
+							'data-toggle' => 'tooltip',
+							'required'    => true,
+							'class_cont'  => 'col-sm-12'
+						]) !!}
+						<div class="col-sm-12"></div>
 
-					<div class="form-group col-sm-6">
-					    <label class="requerido">Monto a Pagar</label>
-					    <div class="form-control">
-					    	{{ $compras->monto }} {{ $controller->conf('moneda') }}
-					    </div>
-				    </div>
-					<div class="col-sm-12"></div>
+						<div class="form-group col-sm-12">
+							<label class="requerido">Monto a Pagar</label>
+							<div class="form-control">
+								{{ $compras->monto }} {{ $controller->conf('moneda') }}
+							</div>
+						</div>
+						<div class="col-sm-12"></div>
 
-					{!! Form::bsSelect('bancos_id', $controller->bancos(), '', [
-						'label'       => 'Banco Receptor',
-						'placeholder' => '- Seleccione un Banco',
-						'title'       => 'Seleccione el banco al cual realizó la transferencia',
-						'data-toggle' => 'tooltip',
-						'required'    => true,
-						'class_cont'  => 'col-sm-6'
-					]) !!}
-					<div class="col-sm-12"></div>
+						{!! Form::bsSelect('bancos_id', $controller->bancos(), '', [
+							'label'       => 'Banco Receptor',
+							'placeholder' => '- Seleccione un Banco',
+							'title'       => 'Seleccione el banco al cual realizó la transferencia',
+							'data-toggle' => 'tooltip',
+							'required'    => true,
+							'class_cont'  => 'col-sm-12'
+						]) !!}
+						<div class="col-sm-12"></div>
+						
+						{!! Form::bsTextarea('nota', '', [
+							'label'       => 'Nota Adicional',
+							'placeholder' => false,
+							'rows'        => 3,
+							'class_cont'  => 'col-sm-12'
+						]) !!}
+						</div>
+					</div>
+					<div class="col-sm-6">
+						@if(is_null($compras->bancos_id))
+							<p>
+								Cuenta con un limite de 
+								<b title="Hata el {{ $compras->created_at->addHour()->format('d/m/Y h:i:s a') }}">
+									<time datetime="{!! $compras->created_at->addHour()->toRfc3339String() !!}" class="age">
+										{{ $compras->created_at->addHour()->diffInMinutes(\Carbon\Carbon::now()) }} minutos
+									</time>
+								</b> 
+								a partir de este momento para completar el pago, su(s) artículo(s) se 
+								encuentra(n) apartado(s), Si no completa el pago antes de finalizar el tiempo 
+								el (los) items volverán a estar disponibles al público.
+							</p>
+						@endif
 					
-					{!! Form::bsTextarea('nota', '', [
-						'label'       => 'Nota Adicional',
-						'placeholder' => false,
-						'rows'        => 3,
-						'class_cont'  => 'col-sm-6'
-					]) !!}
+						<table class="table table-striped table-bordered table-hover">
+							<tbody>
+								@foreach (alfalibros\Modules\Base\Models\Bancos::all() as $banco)
+								<tr>
+									<td class="active">Banco</td>
+									<td>{{ $banco->banco }}</td>
+								</tr>
+								<tr>
+									<td class="active">Tipo de cuenta</td>
+									<td>{{ $banco->tipo_cuenta }}</td>
+								</tr>
+								<tr>
+									<td class="active">Cuenta</td>
+									<td>{{ $banco->cuenta }}</td>
+								</tr>
+								<tr>
+									<td class="active">Nombre</td>
+									<td>{{ $banco->nombre }}</td>
+								</tr>
+								<tr>
+									<td class="active">Rif</td>
+									<td>{{ $banco->cedula }}</td>
+								</tr>
+								<tr>
+									<td class="active">Correo</td>
+									<td>{{ $banco->correo }}</td>
+								</tr>
+								<tr>
+									<td class="active">Referencia</td>
+									<td>Compra N&deg;: {{ $compras->sale_id }}</td>
+								</tr>
+								<tr>
+									<td class="active">Monto a Pagar</td>
+									<td>{{ number_format($compras->monto, 2, ',', '.') }} {{ $controller->conf('moneda') }}</td>
+								</tr>
+								@endforeach
+							</tbody>
+						</table>
+					</div>
 					<div class="col-sm-12"></div>
 
 					<div class="form-group col-sm-12 text-right">
@@ -81,44 +139,99 @@
 
 					<h2 class="col-sm-12" style="font-weight: bold;">Datos Bancarios</h2>
 
-					<div class="form-group col-sm-6">
-					    <label for="banco_usuario" class="requerido">Banco del cliente</label>
-				        <div class="form-control" data-toggle="tooltip" title="Nombre del Banco del Cliente">
-				        	{{ $compras->banco_usuario}}
-				        </div>
-				    </div>
-					<div class="col-sm-12"></div>
-					
-					<div class="form-group col-sm-6">
-					    <label for="codigo_transferencia" class="requerido">Numero de Recibo</label>
-				        <div class="form-control" data-toggle="tooltip" title="Numero de Recibo de transferencia">
-				        	{{ $compras->codigo_transferencia }}
-				        </div>
-				    </div>
-					<div class="col-sm-12"></div>
+					<div class="col-sm-6">
+						<div class="form-group col-sm-12">
+							<label for="banco_usuario" class="requerido">Banco del cliente</label>
+							<div class="form-control" data-toggle="tooltip" title="Nombre del Banco del Cliente">
+								{{ $compras->banco_usuario}}
+							</div>
+						</div>
+						<div class="col-sm-12"></div>
+						
+						<div class="form-group col-sm-12">
+							<label for="codigo_transferencia" class="requerido">Numero de Recibo</label>
+							<div class="form-control" data-toggle="tooltip" title="Numero de Recibo de transferencia">
+								{{ $compras->codigo_transferencia }}
+							</div>
+						</div>
+						<div class="col-sm-12"></div>
 
-					<div class="form-group col-sm-6">
-					    <label class="requerido">Monto a Transferir</label>
-					    <div class="form-control">
-					    	{{ $compras->monto }} {{ $controller->conf('moneda') }}
-					    </div>
-				    </div>
-					<div class="col-sm-12"></div>
+						<div class="form-group col-sm-12">
+							<label class="requerido">Monto a Transferir</label>
+							<div class="form-control">
+								{{ $compras->monto }} {{ $controller->conf('moneda') }}
+							</div>
+						</div>
+						<div class="col-sm-12"></div>
 
-				    <div class="form-group col-sm-6">
-					    <label for="bancos_id" class="requerido">Banco Receptor</label>
-				        <div class="form-control" data-toggle="tooltip" title="Banco al cual realizó la transferencia">
-				        	{{ $compras->bancos->banco }}
-				        </div>
-				    </div>
-					<div class="col-sm-12"></div>
-
-					<div class="form-group col-sm-6">
+						<div class="form-group col-sm-12">
+							<label for="bancos_id" class="requerido">Banco Receptor</label>
+							<div class="form-control" data-toggle="tooltip" title="Banco al cual realizó la transferencia">
+								{{ $compras->bancos->banco }}
+							</div>
+						</div>
+					<div class="form-group col-sm-12">
 					    <label for="nota" class="requerido">Nota Adicional</label>
 				        <div class="form-control">
 				        	{{ $compras->nota }}
 				        </div>
 				    </div>
+				    </div>
+					
+					<div class="col-sm-6">
+						@if(is_null($compras->bancos_id))
+							<p>
+								Cuenta con un limite de 
+								<b title="Hata el {{ $compras->created_at->addHour()->format('d/m/Y h:i:s a') }}">
+									<time datetime="{!! $compras->created_at->addHour()->toRfc3339String() !!}" class="age">
+										{{ $compras->created_at->addHour()->diffInMinutes(\Carbon\Carbon::now()) }} minutos
+									</time>
+								</b> 
+								a partir de este momento para completar el pago, su(s) artículo(s) se 
+								encuentra(n) apartado(s), Si no completa el pago antes de finalizar el tiempo 
+								el (los) items volverán a estar disponibles al público.
+							</p>
+						@endif
+					
+						<table class="table table-striped table-bordered table-hover">
+							<tbody>
+								@foreach (alfalibros\Modules\Base\Models\Bancos::all() as $banco)
+								<tr>
+									<td class="active">Banco</td>
+									<td>{{ $banco->banco }}</td>
+								</tr>
+								<tr>
+									<td class="active">Tipo de cuenta</td>
+									<td>{{ $banco->tipo_cuenta }}</td>
+								</tr>
+								<tr>
+									<td class="active">Cuenta</td>
+									<td>{{ $banco->cuenta }}</td>
+								</tr>
+								<tr>
+									<td class="active">Nombre</td>
+									<td>{{ $banco->nombre }}</td>
+								</tr>
+								<tr>
+									<td class="active">Rif</td>
+									<td>{{ $banco->cedula }}</td>
+								</tr>
+								<tr>
+									<td class="active">Correo</td>
+									<td>{{ $banco->correo }}</td>
+								</tr>
+								<tr>
+									<td class="active">Referencia</td>
+									<td>Compra N&deg;: {{ $compras->sale_id }}</td>
+								</tr>
+								<tr>
+									<td class="active">Monto a Pagar</td>
+									<td>{{ number_format($compras->monto, 2, ',', '.') }} {{ $controller->conf('moneda') }}</td>
+								</tr>
+								@endforeach
+							</tbody>
+						</table>
+					</div>
 					<div class="col-sm-12"></div>
 
 				    @if (is_null($compras->bancos_id) && $compras_suspendida == 0)
@@ -143,74 +256,6 @@
 	</div>
 </div>
 
-<div id="datosBancosModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="datosBancosModalLabel">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="datosBancosModalLabel">Datos para realizar la transferencia.</h4>
-			</div>
-			<div class="modal-body">
-				@if(is_null($compras->bancos_id))
-					<p>
-						Cuenta con un limite de 
-						<b title="Hata el {{ $compras->created_at->addHour()->format('d/m/Y h:i:s a') }}">
-							<time datetime="{!! $compras->created_at->addHour()->toRfc3339String() !!}" class="age">
-								{{ $compras->created_at->addHour()->diffInMinutes(\Carbon\Carbon::now()) }} minutos
-							</time>
-						</b> 
-						a partir de este momento para completar el pago, su(s) artículo(s) se 
-						encuentra(n) apartado(s), Si no completa el pago antes de finalizar el tiempo 
-						el (los) items volverán a estar disponibles al público.
-					</p>
-				@endif
-			
-				<table class="table table-striped table-bordered table-hover">
-					<tbody>
-						@foreach (alfalibros\Modules\Base\Models\Bancos::all() as $banco)
-						<tr>
-							<td class="active">Banco</td>
-							<td>{{ $banco->banco }}</td>
-						</tr>
-						<tr>
-							<td class="active">Tipo de cuenta</td>
-							<td>{{ $banco->tipo_cuenta }}</td>
-						</tr>
-						<tr>
-							<td class="active">Cuenta</td>
-							<td>{{ $banco->cuenta }}</td>
-						</tr>
-						<tr>
-							<td class="active">Nombre</td>
-							<td>{{ $banco->nombre }}</td>
-						</tr>
-						<tr>
-							<td class="active">Rif</td>
-							<td>{{ $banco->cedula }}</td>
-						</tr>
-						<tr>
-							<td class="active">Correo</td>
-							<td>{{ $banco->correo }}</td>
-						</tr>
-						<tr>
-							<td class="active">Referencia</td>
-							<td>Compra N&deg;: {{ $compras->sale_id }}</td>
-						</tr>
-						<tr>
-							<td class="active">Monto a Pagar</td>
-							<td>{{ number_format($compras->monto, 2, ',', '.') }} {{ $controller->conf('moneda') }}</td>
-						</tr>
-						@endforeach
-					</tbody>
-				</table>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-			</div>
-		</div>
-	</div>
-</div>
-
 @endsection
 
 @push('css')
@@ -232,8 +277,7 @@
 @endpush
 @push('js')
 	
-<script type="text/javascript">
-	
+<script type="text/javascript">	
 	var $url_paso_4 = "{{ route('pag.compra.ver', [ 'codigo' => $codigo, 'paso' => 4 ]) }}";
 	if(parseInt(banco_id) != 0){
 		$('#conteo').remove();
@@ -243,21 +287,7 @@
 	
 	$('.confirma').click(function(){
 		location.href = $url_paso_4;
-		/*
-		setTimeout(function(){
-			location.href = $url_paso_4;
-		}, 3000);
-		*/
 	});
-	
-	/*
-	$('#cotizacion').click(function(){
-		
-		url_cotiza = "{{ route('pag.compra.cotizacion', [ 'codigo' => $codigo ]) }}";
-  		window.open(url_cotiza, '_blank');
-	
-	});
-	*/
 
 	$('#form-confirmar').submit(function() { 
 		// submit the form 

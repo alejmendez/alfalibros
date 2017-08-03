@@ -11,6 +11,7 @@ class UsuarioDireccion extends modelo
     protected $table = 'usuario_direccion';
     protected $fillable = [
         'usuario_id',
+        'customer_id',
         'nombre_direccion',
         'persona_contacto',
         'telefono',

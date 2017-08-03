@@ -7,6 +7,7 @@ use alfalibros\Http\Requests\Request;
 class UsuariosDireccionRequest extends Request {
 	protected $reglasArr = [
 		'nombre_direccion' => ['required', 'max:150'],
+		'persona_cedula'   => ['required'],
 		'persona_contacto' => ['max:150'],
 		'telefono'         => ['max:20'],
 		'estado'           => ['required', 'max:50'],

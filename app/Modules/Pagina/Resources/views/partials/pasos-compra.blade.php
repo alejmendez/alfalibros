@@ -36,7 +36,7 @@ $lista = [
         <div class="mt-element-step">
             <div class="row step-line">
                 @foreach($lista as $key => $elemento)
-                <div class="col-md-3 mt-step-col {{ $paso > $key ? 'active' : '' }} {{ $paso == $key ? 'done' : '' }} {{ $key == 1 ? 'first' : '' }} {{ $key == 4 ? 'last' : '' }}">
+                <div class="col-sm-3 mt-step-col {{ $paso > $key ? 'active' : '' }} {{ $paso == $key ? 'done' : '' }} {{ $key == 1 ? 'first' : '' }} {{ $key == 4 ? 'last' : '' }}">
                     <a href="{{ $paso < $key ? '#' : route('pag.compra.ver', [ 'codigo' => $codigo, 'paso' => $key ]) }}">
                         <div class="mt-step-number bg-white"><i class="fa {{ $elemento['icono']}}"></i></div>
                         <div class="mt-step-title uppercase font-grey-cascade">{{ $elemento['titulo'] }}</div>

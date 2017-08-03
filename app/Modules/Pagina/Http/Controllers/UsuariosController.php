@@ -67,7 +67,10 @@ class UsuariosController extends Controller
 					->subject("Recupera tu contraseña de Alfalibros!");
 			});
 
-			return ['s' => true, 'msj' => 'Se envio un correo electronico con las instrucciones para restaurar su contraseña.'];
+			return [
+				's' => true, 
+				'msj' => 'Se envio un correo electronico con las instrucciones para restaurar su contraseña.'
+			];
 		}
 
 		$this->setTitulo('Recuperar Clave de Usuario');
@@ -119,7 +122,7 @@ class UsuariosController extends Controller
 	public function registrar(RegistroRequest $request)
 	{
 		$request->email = strtolower($request->email);
-		$request->account_number = strtoupper($request->account_number);
+		$request->cedula = strtoupper($request->cedula);
 		if ($request->aceptar != 1) {
 			return response()->json([
 				'error' => 1,
@@ -143,7 +146,7 @@ class UsuariosController extends Controller
 		$persona = new Personas();
 		$cliente = new Clientes();
 		/*
-		$cliente = Clientes::where('account_number', $request->account_number)->first();
+		$cliente = Clientes::where('cedula', $request->cedula)->first();
 
 		if (!$cliente) {
 			$cliente = $persona->cliente;
@@ -175,10 +178,10 @@ class UsuariosController extends Controller
 			$persona->save();
 
 			$dataCliente = [
-				//'account_number'             => $request->account_number,
+				//'cedula'                   => $request->cedula,
 				'person_id'                  => $persona->person_id,
 				'override_default_tax'       => 0,
-				'company_name'               => $request->account_number,
+				'company_name'               => $request->cedula,
 				'balance'                    => 0,
 				'points'                     => 0,
 				'current_spend_for_points'   => 0,
@@ -204,6 +207,8 @@ class UsuariosController extends Controller
 				'confirmado' => 's',
 				'codigo'     => str_random(50)
 			]);
+
+			\Auth::login($usuario);
 
 			/*\Mail::send("pagina::emails.bienvenido", ['usuario' => $usuario], function($message) use($usuario, $request) {
 				$message->from('no_responder@alfalibros.com', 'Alfalibros.com');
@@ -267,10 +272,10 @@ class UsuariosController extends Controller
 		DB::beginTransaction();
         try{
             $ubicacion = is_null($id) ? new UsuarioDireccion() : UsuarioDireccion::find($id);
-			if (is_null($id)) {
-            	$ubicacion = new UsuarioDireccion();
+			$ubicacion->customer_id = intval($ubicacion->customer_id);
+			if ($ubicacion->customer_id == 0) {
 				$cliente = Clientes::create([
-					//'account_number'             => $request->account_number,
+					//'cedula'             => $request->cedula,
 					'person_id'                  => $usuario->persona->person_id,
 					'override_default_tax'       => 0,
 					'company_name'               => $request->persona_cedula,
@@ -282,9 +287,7 @@ class UsuariosController extends Controller
 					'card_issuer'                => '',
 				]);
 			} else {
-            	$ubicacion = UsuarioDireccion::find($id);
 				$cliente = Clientes::find($ubicacion->customer_id);
-
 				$cliente->company_name = $request->persona_cedula;
 				$cliente->save(); 
 			}

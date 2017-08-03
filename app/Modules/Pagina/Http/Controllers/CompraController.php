@@ -353,7 +353,6 @@ class CompraController extends Controller
 		return redirect('compra/ver');
 	}
 
-
 	public function bancos()
 	{
 		return Bancos::all()->pluck('banco', 'id');
@@ -363,15 +362,30 @@ class CompraController extends Controller
 	{
 		//$data    =  $request;
 		$compras = Compras::where('codigo', $request->codigo)->first();
-
+		
 		$compras->direccion_id    = $request->direccion_id;
 		$compras->metodo_envio_id = $request->metodo_envio_id;
+		
 		$compras->nombre          = $request->nombre;
+		$compras->cedula          = $request->cedula;
 		$compras->direccion       = $request->direccion;
 		$compras->ultimo_paso     = 2;
-		$compras->save();
 		
+		$compras->save();
+
 		if($compras){
+			if ($compras->estatus == 0) {
+				$dbDefault = \Config::get('database.default');
+				$venta = Venta::on($dbDefault)->find($compras->sale_id);
+				$productos = VentaDetalle::on($dbDefault)->where('sale_id', $compras->sale_id)->get();
+			} else {
+				$venta = Venta::find($compras->sale_id);
+				$productos = VentaDetalle::where('sale_id', $compras->sale_id)->get();
+			}
+			
+			$venta->customer_id = $compras->direccion_envio->customer_id;
+			$venta->save();
+
 			return [ 's'=> 's', 'msj' => 'Facturación guardada'];
 		}
 

@@ -36,14 +36,30 @@
 					</div>
 
 					<div class="row">
-					{!! Form::bsText('account_number', '', [
-						'label'       => 'Cedula',
-						'placeholder' => '',
-						'title'       => 'Ejm: V12345678',
-						'required'    => 'required',
-						'data-toggle' => 'tooltip',
-						'class_cont'  => 'col-sm-6'
-					]) !!}
+					<div class="form-group col-sm-6">
+						<label for="cedula_input" class="requerido">C&eacute;dula o Rif</label>
+						<input id="cedula" name="cedula" type="hidden" value="" />
+						
+						<div class="input-group">
+							<div class="input-group-btn">
+								<button id="nacionalidad" type="button" class="btn green dropdown-toggle" data-toggle="dropdown">
+									<span>V</span>
+									<i class="fa fa-angle-down"></i>
+								</button>
+								<ul class="dropdown-menu">
+									@foreach(['V', 'E', 'J', 'G'] as $nacionalidad)
+									<li>
+										<a href="javascript:nacionalidad('{{ $nacionalidad }}');"> {{ $nacionalidad }} </a>
+									</li>
+									@endforeach
+								</ul>
+							</div>
+							<input id="cedula_input" class="cedula form-control" 
+								required type="text" value="" 
+								data-toggle="tooltip"
+								title="RIF/C.I del Cliente ejemplo: V15467845, J854575640, E8897547" />
+						</div>
+					</div>
 
 					{!! Form::bsText('phone_number', '', [
 						'label'       => 'Numero de Telefono',
@@ -93,3 +109,22 @@
 			</div>
 		</div>
 	</div>
+
+@push('js')
+<script type="text/javascript">
+$(function(){
+	$.mask.definitions['R']='[JGVEjgve]';
+	$(".cedula").mask("999999?999");
+
+	$('#cedula_input').on('blur',function(){
+		 nacionalidad($("#nacionalidad span").text());
+	});
+});
+
+function nacionalidad(nac){
+	nac = nac || $("#nacionalidad span").text();
+	$("#nacionalidad span").text(nac);
+	$("#cedula").val(nac + $("#cedula_input").val());
+}
+</script>
+@endpush

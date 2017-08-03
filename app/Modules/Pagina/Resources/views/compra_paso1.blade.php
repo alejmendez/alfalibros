@@ -87,7 +87,7 @@
 
 					<div class="form-group col-sm-6">
 						<label for="cedula_input" class="requerido">C&eacute;dula o Rif</label>
-						<input id="cedula" nombre="cedula" type="hidden" value="{{ strtoupper($compras->cedula) }}" />
+						<input id="cedula" name="cedula" type="hidden" value="{{ strtoupper($compras->cedula) }}" />
 						
 						<div class="input-group">
 							<div class="input-group-btn">
@@ -135,32 +135,34 @@
 </div>
 
 <div id="nuevaDireccionModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="nuevaDireccionModalModalLabel">
-	<div class="modal-dialog" role="document">
+	<div class="modal-dialog modal-dialog-direccion" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
 				<h4 class="modal-title" id="nuevaDireccionModalModalLabel">Registrar Nueva Dirección.</h4>
 			</div>
 			<div class="modal-body">
 				<div class="row">
 					{!! Form::open(['id' => 'form-nueva-direccion', 'url' => route('pag.usuarios.direccion.nuevo')]) !!}
 						{!! Form::bsText('nombre_direccion', '', [
-							'label'       => 'Nombre (Para uso personal)',
-							'placeholder' => false,
+							'label'       => 'Alias',
+							'placeholder' => 'Ej: Mi Casa',
 							'required'    => true,
-							'class_cont'  => 'col-sm-12'
+							'class_cont'  => 'col-sm-6'
 						]) !!}
 
 						{!! Form::bsText('persona_contacto', '', [
 							'label'       => 'Persona de Contacto',
 							'placeholder' => false,
 							'required'    => true,
-							'class_cont'  => 'col-sm-12'
+							'class_cont'  => 'col-sm-6'
 						]) !!}
 
-						<div class="form-group col-sm-12">
-							<label for="cedula_persona_input" class="requerido">Cedula de al Persona de Contacto</label>
-							<input id="persona_cedula" nombre="persona_cedula" type="hidden" value="" />
+						<div class="form-group col-sm-6">
+							<label for="persona_cedula_input" class="requerido">Cedula de al Persona de Contacto</label>
+							<input id="persona_cedula" name="persona_cedula" type="hidden" value="" />
 							
 							<div class="input-group">
 								<div class="input-group-btn">
@@ -176,19 +178,20 @@
 										@endforeach
 									</ul>
 								</div>
-								<input id="cedula_persona_input" class="cedula form-control" 
+								<input id="persona_cedula_input" class="cedula form-control" 
 									required type="text" value="" 
 									data-toggle="tooltip"
 									title="RIF/C.I del Cliente ejemplo: V15467845, J854575640, E8897547" />
 							</div>
 						</div>
 
+						<hr />
+
 						{!! Form::bsText('telefono', '', [
 							'label'       => 'Telefono',
 							'placeholder' => false,
-							'help'        => 'Telefono de Contacto',
 							'required'    => true,
-							'class_cont'  => 'col-sm-12'
+							'class_cont'  => 'col-sm-6'
 						]) !!}
 						
 
@@ -196,48 +199,47 @@
 							'label'       => 'Estado',
 							'placeholder' => false,
 							'required'    => true,
-							'class_cont'  => 'col-sm-12'
+							'class_cont'  => 'col-sm-6'
 						]) !!}
 
 						{!! Form::bsText('municipio', '', [
 							'label'       => 'Municipio',
 							'placeholder' => false,
 							'required'    => true,
-							'class_cont'  => 'col-sm-12'
+							'class_cont'  => 'col-sm-6'
 						]) !!}
 
 						{!! Form::bsText('parroquia', '', [
 							'label'       => 'Parroquia',
 							'placeholder' => false,
 							'required'    => true,
-							'class_cont'  => 'col-sm-12'
+							'class_cont'  => 'col-sm-6'
 						]) !!}
 
 						{!! Form::bsText('sector', '', [
 							'label'       => 'Sector',
 							'placeholder' => false,
 							'required'    => true,
-							'class_cont'  => 'col-sm-12'
+							'class_cont'  => 'col-sm-6'
 						]) !!}
 						
 						{!! Form::bsText('ciudad', '', [
 							'label'       => 'Ciudad',
 							'placeholder' => false,
 							'required'    => true,
-							'class_cont'  => 'col-sm-12'
+							'class_cont'  => 'col-sm-6'
 						]) !!}
 
 						{!! Form::bsText('codigo_postal', '', [
 							'label'       => 'Código Postal',
 							'placeholder' => false,
 							'required'    => true,
-							'class_cont'  => 'col-sm-12'
+							'class_cont'  => 'col-sm-6'
 						]) !!}
 						
 						{!! Form::bsTextarea('direccion', $usuario->persona->address_1, [
 							'label'       => 'Dirección de Envio',
 							'placeholder' => false,
-							'help'        => 'Dirección de Envio',
 							'required'    => true,
 							'rows'        => 3,
 							'class_cont'  => 'col-sm-12'
@@ -262,7 +264,6 @@
 		</div>
 	</div>
 </div>
-
 
 
 @endsection
@@ -296,7 +297,7 @@
 		 nacionalidad($("#nacionalidad span").text());
 	});
 
-	$('#cedula_persona_input').on('blur',function(){
+	$('#persona_cedula_input').on('blur',function(){
 		 nacionalidad_persona($("#nacionalidad_persona span").text());
 	});
 
@@ -314,17 +315,18 @@
 		$.ajax(rutaDireccion + '/' + $("#direccion_id").val(), {
 			method:'get',
 			success : function(r) {
-				if (typeof(r) === 'string'){
+				if (typeof(r) === 'string') {
 					aviso(r);
 					return false;
 				}
 
-				if (r.persona_contacto != ''){
+				if (r.persona_contacto != '' && $("#nombre").val() == '') {
 					$("#nombre").val(r.persona_contacto);
 				}
 
-				if (r.persona_cedula != ''){
-					$("#cedula_input").val(r.persona_cedula);
+				if (r.persona_cedula != '' && $("#cedula_input").val() == '') {
+					$("#nacionalidad span").text(r.persona_cedula.substr(0, 1));
+					$("#cedula_input").val(r.persona_cedula.substr(1));
 				}
 
 				var dir = [
@@ -332,9 +334,10 @@
 					r.parroquia,
 					r.municipio,
 					r.estado,
-				].join(", ").replace(/, +/g, ", ");
+				].join(", ")
+				.replace(new RegExp(', ,', 'g'), ',');
 				
-				if (dir != ''){
+				if (dir != '' && $("#direccion").val() == ''){
 					$("#direccion").val(dir);
 				}
 			}
@@ -354,13 +357,6 @@
 			},
 			success : function(r) {
 				location.href = $url_paso_2;
-				
-				/*
-				setTimeout(function(){
-					location.href = $url_paso_2;
-				}, 3000);
-				*/
-
 			}
 		}); 
 		// return false to prevent normal browser submit and page navigation 
@@ -385,6 +381,7 @@
 				} else {
 					$('#direccion_id').append('<option value=' + r.id + '>' + r.nombre + '</option>');
 					$('#direccion_id').val(r.id);
+					$('#direccion_id').trigger('change');
 				}
 			}
 		};
@@ -457,7 +454,7 @@
 	function nacionalidad_persona(nac){
 		nac = nac || $("#nacionalidad_persona span").text();
 		$("#nacionalidad_persona span").text(nac);
-		$("#cedula_persona").val(nac + $("#cedula_persona_input").val());
+		$("#persona_cedula").val(nac + $("#persona_cedula_input").val());
 	}
 
 	function showRowFacturacion() {
@@ -492,6 +489,13 @@
 
 					ele.val(valor);
 				});
+
+				if (r.persona_cedula == '') {
+					r.persona_cedula = 'V0';
+				}
+
+				$("#nacionalidad_persona span").text(r.persona_cedula.substr(0, 1));
+				$("#persona_cedula_input").val(r.persona_cedula.substr(1));
 			}
 		});
 	}

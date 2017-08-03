@@ -17,7 +17,6 @@
 											<th style="width: 15%">Monto</th>
 											<th style="width: 20%">Estatus</th>
 											<th style="width: 20%">Fecha de Pedido</th>
-											<th style="width: 20%">Tiempo Limite</th>
 											<th style="width: 150px">Acci&oacute;n</th>
 										</tr>
 									</thead>
@@ -43,15 +42,6 @@
 											</td>
 											<td>
 												{!! $compra->created_at->format('d/m/Y \<\b\r\>h:i:s a') !!}
-											</td>
-											<td>
-												@if ($compra->created_at->addHour()->timestamp < \Carbon\Carbon::now()->timestamp)
-													Tiempo Agotado
-												@elseif ($compra->aprobado == 0)
-													<time datetime="{!! $compra->created_at->addHour()->toRfc3339String() !!}" class="age">
-														{!! $compra->created_at->addHour()->format('d/m/Y h:i:s a') !!}
-													</time>
-												@endif
 											</td>
 											<td>
 												@if ($compra->created_at->addHour()->timestamp < \Carbon\Carbon::now()->timestamp)

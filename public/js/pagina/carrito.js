@@ -111,6 +111,7 @@ var app = new Vue({
 
 					if (r.errores) {
 						alert(r.errores);
+						t.$data.carrito = r.carrito;
 						t.$data.bloquear = false;
 						return;
 					}

@@ -293,7 +293,7 @@ class UsuariosController extends Controller
 			}
 			
 			$ubicacion->usuario_id       = $usuario->id;
-			$ubicacion->customer_id      = $cliente->id;
+			$ubicacion->customer_id      = $usuario->persona->person_id;
 			
 			$ubicacion->nombre_direccion = $request->nombre_direccion;
 			$ubicacion->persona_contacto = $request->persona_contacto;

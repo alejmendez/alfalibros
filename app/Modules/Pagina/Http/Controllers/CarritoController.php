@@ -127,7 +127,8 @@ class CarritoController extends Controller
 					$nombre = preg_match('/libros/i', $_cartDB->nombre) ? 
 								substr($_cartDB->nombre, strrpos($_cartDB->nombre, ',') + 1) : 
 								$_cartDB->nombre;
-					$errores[] = 'El Libro ' . $nombre . ' no se encuentra en las cantidades solicitadas.';
+					//$errores[] = 'El Libro <b>' . $nombre . '</b> no se encuentra en las cantidades solicitadas.';
+					$errores[] = $nombre;
 					Cart::update($carritoTabla['rowId'], ['qty' => intval($_cartDB->cantidad)]);
 				}else{
 					Cart::update($carritoTabla['rowId'], ['qty' => intval($carritoTabla['qty'])]);
@@ -141,7 +142,15 @@ class CarritoController extends Controller
 		];
 
 		if (count($errores) > 0){
-			$salida['errores'] = implode("\n", $errores) . "\n" . 'Se realizaron ajustes al carrito de compras';
+			$errores = '<b>' . implode("</b><br /><b>", $errores) . '</b>';
+
+			if (count($errores) == 1) {
+				$salida['errores'] = 'El Libro ' . $errores . " no se encuentra en las cantidades solicitadas.<br /><br />" . 
+					'Se realizaron ajustes al carrito de compras';
+			} else {
+				$salida['errores'] = 'Los Libros: <b>' . $errores . " no se encuentran en las cantidades solicitadas.\n<br /><br />" . 
+					'Se realizaron ajustes al carrito de compras';
+			}
 		}
 
 		return $salida;

@@ -174,20 +174,33 @@ class CompraController extends Controller
 				$nombre = preg_match('/libros/i', $producto->nombre) ? 
 							substr($producto->nombre, strrpos($producto->nombre, ',') + 1) : 
 							$producto->nombre;
-				$errores[] = 'El Libro ' . $nombre . ' no se encuentra en las cantidades solicitadas.';
-
+				//$errores[] = 'El Libro ' . $nombre . ' no se encuentra en las cantidades solicitadas.';
+				$errores[] = $nombre;
 				if ($productoCarrito->qty <= 1) {
 					Cart::remove($productoCarrito->rowId);
 				} else {
-					Cart::update($productoCarrito->rowId, ['qty' => $producto->cantidad]);
+					Cart::update($productoCarrito->rowId, ['qty' => intval($producto->cantidad)]);
 				}
 			}
 		}
 
-		if (count($errores) > 0) {
-			return [
-				'errores' => implode("\n", $errores) . "\n" . 'Se realizaron ajustes al carrito de compras'
+
+		if (count($errores) > 0){
+			$salida = [
+				'errores' => '',
+				'carrito' => Cart::content()->values()
 			];
+			$errores = '<b>' . implode("</b><br /><b>", $errores) . '</b>';
+
+			if (count($errores) == 1) {
+				$salida['errores'] = 'El Libro ' . $errores . " no se encuentra en las cantidades solicitadas.<br /><br />" . 
+					'Se realizaron ajustes al carrito de compras';
+			} else {
+				$salida['errores'] = 'Los Libros: <b>' . $errores . " no se encuentran en las cantidades solicitadas.\n<br /><br />" . 
+					'Se realizaron ajustes al carrito de compras';
+			}
+
+			return $salida;
 		}
 
 		DB::beginTransaction();

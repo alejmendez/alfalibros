@@ -24,6 +24,26 @@ return [
 					'metronic/funciones.js'
 				]
 			],
+			'microjobengine' => [
+				'css' => [
+					'microjobengine/style.css',
+					'microjobengine/assets/css/main.css',
+				],
+				'js' => [
+					'microjobengine/includes/aecore/assets/js/backbone.min9632.js',
+					'microjobengine/includes/aecore/assets/js/marionette68b3.js',
+					'microjobengine/includes/aecore/assets/js/appengine68b3.js',
+					'microjobengine/assets/js/lib/raty9e1e.js',
+					'microjobengine/includes/aecore/assets/js/jquery.validate.min66f2.js',
+					'microjobengine/includes/aecore/assets/js/slider-bt68b3.js',
+					'microjobengine/assets/js/lib/toastr.min9e1e.js',
+					'microjobengine/assets/js/lib/chosen.jquery.min9e1e.js',
+					'microjobengine/assets/js/front9e1e.js',
+					'microjobengine/assets/js/lib/waves9e1e.js',
+					'microjobengine/assets/js/lib/jquery.dot9e1e.js',
+					'microjobengine/assets/js/lib/customscrollbar.min9e1e.js',
+				],
+			],
 			'ie' => [
 				'js' => [
 					'https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js',
@@ -509,6 +529,26 @@ return [
 					'metronic/init.js',
 					'metronic/funciones.js'
 				]
+			],
+			'microjobengine' => [
+				'css' => [
+					'microjobengine/style.css',
+					'microjobengine/assets/css/main.css',
+				],
+				'js' => [
+					'microjobengine/includes/aecore/assets/js/backbone.min9632.js',
+					'microjobengine/includes/aecore/assets/js/marionette68b3.js',
+					'microjobengine/includes/aecore/assets/js/appengine68b3.js',
+					'microjobengine/assets/js/lib/raty9e1e.js',
+					'microjobengine/includes/aecore/assets/js/jquery.validate.min66f2.js',
+					'microjobengine/includes/aecore/assets/js/slider-bt68b3.js',
+					'microjobengine/assets/js/lib/toastr.min9e1e.js',
+					'microjobengine/assets/js/lib/chosen.jquery.min9e1e.js',
+					'microjobengine/assets/js/front9e1e.js',
+					'microjobengine/assets/js/lib/waves9e1e.js',
+					'microjobengine/assets/js/lib/jquery.dot9e1e.js',
+					'microjobengine/assets/js/lib/customscrollbar.min9e1e.js',
+				],
 			],
 			'ie' => [
 				'js' => [

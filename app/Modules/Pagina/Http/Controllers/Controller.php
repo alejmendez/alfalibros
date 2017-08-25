@@ -40,7 +40,7 @@ class Controller extends BaseController
 		'maskedinput',
 		//'owl-carousel',
 		'pace', 'jquery-form', 'pnotify',
-		'modernizr','components-metronic'
+		'modernizr','components-metronic', 'microjobengine','vue'
 	];
 
 	public function __construct()
